@@ -1,90 +1,190 @@
 <template>
-    <div class="footer">
-        <span>Winbid <i class="bi bi-trophy"></i></span>
-        <div class="footer-links">
-            <router-link to="/">Ana Sayfa</router-link>
-            <router-link to="/cart">Sepet</router-link>
-            <router-link to="/about">Hakkında</router-link>
-            <router-link to="/contact">İletişim</router-link>
+  <div>
+    <!-- Dalga SVG - Footer'ın üstünde -->
+    <svg
+      class="wave"
+      preserveAspectRatio="none"
+      viewBox="0 0 2160 263"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M2160 262.5H0V0C360 80 720 120 1080 120C1440 120 1800 80 2160 0V262.5Z"
+        fill="#1F2937"
+      />
+    </svg>
+
+    <!-- Footer Alanı -->
+    <footer class="footer">
+      <div class="container">
+        <!-- Üst Kısım -->
+        <div class="footer-top">
+          <div class="footer-left">
+            <h3 class="footer-title">LibPoint Kütüphane Sistemi</h3>
+            <p class="footer-description">
+              Kitaplara kolayca ulaşın, rezervasyon yapın.
+            </p>
+          </div>
+
+          <div class="footer-links">
+            <!-- Hakkında -->
+            <div>
+              <h4 class="footer-links-title">Hakkında</h4>
+              <ul class="footer-links-list">
+                <li><a href="#">Kütüphane Hakkında</a></li>
+                <li><a href="#">Kurallar</a></li>
+                <li><a href="#">İletişim</a></li>
+              </ul>
+            </div>
+            <!-- Yardım -->
+            <div>
+              <h4 class="footer-links-title">Yardım</h4>
+              <ul class="footer-links-list">
+                <li><a href="#">Sık Sorulanlar</a></li>
+                <li><a href="#">Destek</a></li>
+                <li><a href="#">İade Politikası</a></li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <div class="footer-socials">
-            <a href="">Instagram <i class="bi bi-instagram"></i></a>
-            <a href="">Twitter <i class="bi bi-twitter"></i></a>
-            <a href="">Facebook <i class="bi bi-facebook"></i></a>
+
+        <!-- Alt Kısım -->
+        <div class="footer-bottom">
+          <p>© 2025 LibPoint. Tüm hakları saklıdır.</p>
+          <div class="footer-bottom-links">
+            <a href="#">Gizlilik</a>
+            <a href="#">Kullanım Şartları</a>
+            <a href="#">Çerez Politikası</a>
+          </div>
         </div>
-    </div>
+      </div>
+    </footer>
+  </div>
 </template>
 
 <script>
-    export default{
-        data(){
-            return{
-                
-            }
-        }
-    }
+export default {
+  name: "Footer",
+};
 </script>
 
-
 <style scoped>
-.footer{
-        width: 100%;
-        height: 200px;
-        background-color: black;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 45px
-    }
+/* Dalga SVG */
+/* Dalga SVG */
+.wave {
+  width: 100%;
+  margin: 0; /* Herhangi bir margin varsa sıfırlıyoruz */
+  padding: 0; /* Herhangi bir padding varsa sıfırlıyoruz */
+}
 
-    .footer > span{
-        padding: 5px 0;
-        color: green;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        font-size: 26px;
-        font-weight: 600;
-        /* background-color: wheat; */
-    }
+/* Footer Alanı */
+.footer {
+  background-color: #1f2937;
+  color: white;
+  margin-top: -1px; /* Dalga ve footer'ı birleştirmek için küçük bir margin ekliyoruz */
+  padding-top: 0; /* Footer'ın üst kısmındaki padding'i sıfırlıyoruz */
+  padding-bottom: 4rem;
+}
 
-    .footer > .footer-links{
-        width: 420px;
-        padding: 5px 25px;
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        margin-left: 180px;
-        /* background-color: red; */
-    }
+.container {
+  max-width: 7xl;
+  margin: 0 auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
 
-    .footer > .footer-links > a{
-        font-size: 20px;
-        text-decoration: none;
-        color: white;
-    }
+.footer-top {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  text-align: center;
+}
 
-    .footer > .footer-links > a:hover{
-        color: green;
-    }
+@media (min-width: 1024px) {
+  .footer-top {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+  }
+}
 
-    .footer > .footer-socials{
-        width: 350px;
-        padding: 5px 0;
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        /* background-color: red; */
-    }
+.footer-left {
+  text-align: center;
+}
 
-    .footer > .footer-socials > a{
-        font-size: 18px;
-        text-decoration: none;
-        color: white;
-    }
+.footer-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
 
-    .footer > .footer-socials > a:hover{
-        color: green;
-    }
+.footer-description {
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+/* Footer Link Kısımları */
+.footer-links {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3rem;
+  text-align: center;
+}
+
+.footer-links-title {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+}
+
+.footer-links-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.footer-links-list li a {
+  color: #d1d5db;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.footer-links-list li a:hover {
+  text-decoration: underline;
+}
+
+/* Alt Kısım */
+.footer-bottom {
+  margin-top: 3rem;
+  border-top: 1px solid #4b5563;
+  padding-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+@media (min-width: 1024px) {
+  .footer-bottom {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+}
+
+.footer-bottom-links {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.footer-bottom-links a {
+  color: #d1d5db;
+  text-decoration: none;
+}
+
+.footer-bottom-links a:hover {
+  text-decoration: underline;
+}
 </style>
