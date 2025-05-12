@@ -1,18 +1,6 @@
 <template>
   <div>
-    <!-- Dalga SVG - Footer'ın üstünde -->
-    <svg
-      class="wave"
-      preserveAspectRatio="none"
-      viewBox="0 0 2160 263"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M2160 262.5H0V0C360 80 720 120 1080 120C1440 120 1800 80 2160 0V262.5Z"
-        fill="#1F2937"
-      />
-    </svg>
+
 
     <!-- Footer Alanı -->
     <footer class="footer">
@@ -69,13 +57,6 @@ export default {
 </script>
 
 <style scoped>
-/* Dalga SVG */
-/* Dalga SVG */
-.wave {
-  width: 100%;
-  margin: 0; /* Herhangi bir margin varsa sıfırlıyoruz */
-  padding: 0; /* Herhangi bir padding varsa sıfırlıyoruz */
-}
 
 /* Footer Alanı */
 .footer {

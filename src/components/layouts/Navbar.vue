@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar">
     <div class="navbar-left">
-      <img src="@/assets/logo.svg" alt="Logo" class="logo" />
+      <img src="@/assets/logo.jpeg" alt="Logo" class="logo" />
       <span class="system-name">LibPoint Kütüphane Sistemi</span>
     </div>
     <div class="navbar-right">
@@ -59,7 +59,7 @@ export default {
 }
 
 .logo {
-  height: 40px;
+  height: 65px;
   margin-right: 10px;
 }
 

@@ -9,7 +9,6 @@ import Navbar from './components/layouts/Navbar.vue';
 import Footer from './components/layouts/Footer.vue';
 
 import Home from './components/Home.vue';
-
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
