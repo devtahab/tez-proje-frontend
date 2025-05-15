@@ -9,10 +9,21 @@ import Navbar from './components/layouts/Navbar.vue';
 import Footer from './components/layouts/Footer.vue';
 
 import Home from './components/Home.vue';
+import About from './components/About.vue';
+import Help from './components/Help.vue';
+import Books from './components/Books.vue';
+import Login from './components/Login.vue';
+import SignUp from './components/SignUp.vue';
+
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
-        { path: '/', component: Home }
+        { path: '/', component: Home },
+        { path: '/hakkimizda', component: About },
+        { path: '/yardim', component: Help },
+        { path: '/kitaplar', component: Books },
+        { path: '/login', component: Login },
+        { path: '/signup', component: SignUp }
     ]
 })
 

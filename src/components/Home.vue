@@ -1,53 +1,43 @@
 <template>
   <div class="home-page">
     <!-- 1. Yöntem: Video olarak -->
-    <video
-      ref="videoPlayer"
-      autoplay
-      muted
-      loop
-      playsinline
-      preload="auto"
+    <video 
+      ref="videoPlayer" 
+      autoplay 
+      muted 
+      loop 
+      playsinline 
+      preload="auto" 
       class="video-background"
     >
       <!-- Public dizinindeki dosya -->
-      <source src="../assets/library_medium.mp4" type="video/mp4" />
-
+      <source src="/library_medium.mp4" type="video/mp4">
+      
       <!-- Assets dizinindeki import edilen dosya -->
-      <source :src="videoSrc" type="video/mp4" />
-
+      <source :src="videoSrc" type="video/mp4">
+      
       Your browser does not support the video tag.
     </video>
-
+    
     <!-- 2. Yöntem: Arka plan görseli olarak -->
     <div class="background-overlay"></div>
-
+    
     <div class="welcome">
       <h1 class="welcome-title">LibPoint Kütüphane Sistemine Hoşgeldiniz</h1>
     </div>
-
+    
     <div class="reservation-container">
       <router-link to="/reservation" class="reservation-link">
         <div class="reservation-label">Reservation</div>
-        <img
-          src="/reservation.jpg"
-          alt="Reservation"
-          class="reservation-image"
-        />
+        <img src="/reservation.jpg" alt="Reservation" class="reservation-image">
       </router-link>
     </div>
-
+    
     <div class="book-search-container">
-      <router-link to="/books" class="book-search-button">
-        <svg
-          class="book-icon"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 448 512"
-        >
+      <router-link to="/kitaplar" class="book-search-button">
+        <svg class="book-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
           <!-- Font Awesome Book icon -->
-          <path
-            d="M96 0C43 0 0 43 0 96V416c0 53 43 96 96 96H384h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V384c17.7 0 32-14.3 32-32V32c0-17.7-14.3-32-32-32H384 96zm0 384H352v64H96c-17.7 0-32-14.3-32-32s14.3-32 32-32zm32-240c0-8.8 7.2-16 16-16H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16zm16 48H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16s7.2-16 16-16z"
-          />
+          <path d="M96 0C43 0 0 43 0 96V416c0 53 43 96 96 96H384h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V384c17.7 0 32-14.3 32-32V32c0-17.7-14.3-32-32-32H384 96zm0 384H352v64H96c-17.7 0-32-14.3-32-32s14.3-32 32-32zm32-240c0-8.8 7.2-16 16-16H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16zm16 48H336c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/>
         </svg>
         <span>Kitap Ara</span>
       </router-link>
@@ -58,10 +48,7 @@
         <div class="stat-icon seat-icon">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
             <!-- Font Awesome Chair icon (alternative) -->
-            <path
-              d="M248 48V256h48V58.7c23.9 13.8 40 39.7 40 69.3V256h48V128C384 57.3 326.7 0 256 0H192C121.3 0 64 57.3 64 128V256h48V128c0-29.6 16.1-55.5 40-69.3V256h48V48h48zM48 288c-12.1 0-23.2 6.8-28.6 17.7l-16 32c-5 9.9-4.4 21.7 1.4 31.1S20.9 384 32 384H416c11.1 0 21.2-6.1 26.6-15.9s6.4-21.3 1.4-31.1l-16-32c-5.4-10.9-16.5-17.7-28.6-17.7H48zM32 416v32c0 35.3 28.7 64 64 64H352c35.3 0 64-28.7 64-64V416H32z"
-              fill="black"
-            />
+            <path d="M248 48V256h48V58.7c23.9 13.8 40 39.7 40 69.3V256h48V128C384 57.3 326.7 0 256 0H192C121.3 0 64 57.3 64 128V256h48V128c0-29.6 16.1-55.5 40-69.3V256h48V48h48zM48 288c-12.1 0-23.2 6.8-28.6 17.7l-16 32c-5 9.9-4.4 21.7 1.4 31.1S20.9 384 32 384H416c11.1 0 21.2-6.1 26.6-15.9s6.4-21.3 1.4-31.1l-16-32c-5.4-10.9-16.5-17.7-28.6-17.7H48zM32 416v32c0 35.3 28.7 64 64 64H352c35.3 0 64-28.7 64-64V416H32z" fill="black"/>
           </svg>
         </div>
         <div class="stat-info">
@@ -69,14 +56,12 @@
           <div class="stat-label">Boş Koltuk</div>
         </div>
       </div>
-
+      
       <div class="stat-card">
         <div class="stat-icon people-icon">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
             <!-- Font Awesome People Group icon -->
-            <path
-              d="M72 88a56 56 0 1 1 112 0A56 56 0 1 1 72 88zM64 245.7C54 256.9 48 271.8 48 288s6 31.1 16 42.3V245.7zm144.4-49.3C178.7 222.7 160 261.2 160 304c0 34.3 12 65.8 32 90.5V416c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V389.2C26.2 371.2 0 332.7 0 288c0-61.9 50.1-112 112-112h32c24 0 46.2 7.5 64.4 20.3zM448 416V394.5c20-24.7 32-56.2 32-90.5c0-42.8-18.7-81.3-48.4-107.7C449.8 183.5 472 176 496 176h32c61.9 0 112 50.1 112 112c0 44.7-26.2 83.2-64 101.2V416c0 17.7-14.3 32-32 32H480c-17.7 0-32-14.3-32-32zm8-328a56 56 0 1 1 112 0A56 56 0 1 1 456 88zM576 245.7v84.7c10-11.3 16-26.1 16-42.3s-6-31.1-16-42.3zM320 32a64 64 0 1 1 0 128 64 64 0 1 1 0-128zM240 304c0 16.2 6 31 16 42.3V261.7c-10 11.3-16 26.1-16 42.3zm144-42.3v84.7c10-11.3 16-26.1 16-42.3s-6-31.1-16-42.3zM448 304c0 44.7-26.2 83.2-64 101.2V448c0 17.7-14.3 32-32 32H288c-17.7 0-32-14.3-32-32V405.2c-37.8-18-64-56.5-64-101.2c0-61.9 50.1-112 112-112h32c61.9 0 112 50.1 112 112z"
-            />
+            <path d="M72 88a56 56 0 1 1 112 0A56 56 0 1 1 72 88zM64 245.7C54 256.9 48 271.8 48 288s6 31.1 16 42.3V245.7zm144.4-49.3C178.7 222.7 160 261.2 160 304c0 34.3 12 65.8 32 90.5V416c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V389.2C26.2 371.2 0 332.7 0 288c0-61.9 50.1-112 112-112h32c24 0 46.2 7.5 64.4 20.3zM448 416V394.5c20-24.7 32-56.2 32-90.5c0-42.8-18.7-81.3-48.4-107.7C449.8 183.5 472 176 496 176h32c61.9 0 112 50.1 112 112c0 44.7-26.2 83.2-64 101.2V416c0 17.7-14.3 32-32 32H480c-17.7 0-32-14.3-32-32zm8-328a56 56 0 1 1 112 0A56 56 0 1 1 456 88zM576 245.7v84.7c10-11.3 16-26.1 16-42.3s-6-31.1-16-42.3zM320 32a64 64 0 1 1 0 128 64 64 0 1 1 0-128zM240 304c0 16.2 6 31 16 42.3V261.7c-10 11.3-16 26.1-16 42.3zm144-42.3v84.7c10-11.3 16-26.1 16-42.3s-6-31.1-16-42.3zM448 304c0 44.7-26.2 83.2-64 101.2V448c0 17.7-14.3 32-32 32H288c-17.7 0-32-14.3-32-32V405.2c-37.8-18-64-56.5-64-101.2c0-61.9 50.1-112 112-112h32c61.9 0 112 50.1 112 112z"/>
           </svg>
         </div>
         <div class="stat-info">
@@ -84,14 +69,12 @@
           <div class="stat-label">İçeridekiler</div>
         </div>
       </div>
-
+      
       <div class="stat-card">
         <div class="stat-icon reservation-icon">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
             <!-- Font Awesome Calendar Check icon -->
-            <path
-              d="M128 0c13.3 0 24 10.7 24 24V64H296V24c0-13.3 10.7-24 24-24s24 10.7 24 24V64h40c35.3 0 64 28.7 64 64v16 48V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V192 144 128c0-35.3 28.7-64 64-64h40V24c0-13.3 10.7-24 24-24zM400 192H48V448c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V192zM329 297L217 409c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47 95-95c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"
-            />
+            <path d="M128 0c13.3 0 24 10.7 24 24V64H296V24c0-13.3 10.7-24 24-24s24 10.7 24 24V64h40c35.3 0 64 28.7 64 64v16 48V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V192 144 128c0-35.3 28.7-64 64-64h40V24c0-13.3 10.7-24 24-24zM400 192H48V448c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V192zM329 297L217 409c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47 95-95c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/>
           </svg>
         </div>
         <div class="stat-info">
@@ -118,37 +101,37 @@
 </template>
 
 <script>
-import videoSource from "../assets/library_medium.mp4";
+import videoSource from '../assets/library_medium.mp4';
 
 export default {
   data() {
     return {
       videoLoaded: false,
-      videoSrc: videoSource,
+      videoSrc: videoSource
     };
   },
   mounted() {
     const video = this.$refs.videoPlayer;
     if (video) {
       // Video elementi hazır olduğunda
-      video.addEventListener("loadeddata", () => {
+      video.addEventListener('loadeddata', () => {
         this.videoLoaded = true;
-        console.log("Video loaded successfully");
-
+        console.log('Video loaded successfully');
+        
         // Video yüklendikten sonra doğrudan play çağrısı
-        video.play().catch((err) => {
-          console.error("Video play error:", err);
+        video.play().catch(err => {
+          console.error('Video play error:', err);
         });
       });
-
+      
       // Video yüklenirken hata oluşursa
-      video.addEventListener("error", (e) => {
-        console.error("Video error:", e);
+      video.addEventListener('error', (e) => {
+        console.error('Video error:', e);
         // Hata olursa CSS background kullanılacak
-        document.querySelector(".home-page").classList.add("use-background");
+        document.querySelector('.home-page').classList.add('use-background');
       });
     }
-  },
+  }
 };
 </script>
 
@@ -173,8 +156,8 @@ export default {
 
 /* Video çalışmadığında görsel arka plan kullanmak için */
 .home-page.use-background {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)),
-    url("https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=1600&auto=format");
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), 
+                    url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=1600&auto=format');
   background-size: cover;
   background-position: center;
 }
@@ -245,7 +228,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 auto;
+  margin: -20px auto 0;
   padding: 20px;
 }
 
@@ -269,7 +252,7 @@ export default {
 }
 
 .reservation-link::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -282,7 +265,7 @@ export default {
 }
 
 .reservation-link::after {
-  content: "";
+  content: '';
   position: absolute;
   top: -5px;
   left: -5px;
@@ -290,7 +273,7 @@ export default {
   bottom: -5px;
   z-index: -1;
   background: inherit;
-  background-image: url("/reservation.jpg");
+  background-image: url('/reservation.jpg');
   background-size: cover;
   background-position: center;
   filter: blur(8px) brightness(0.8);
@@ -335,7 +318,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 30px auto;
+  margin: 15px auto;
 }
 
 .book-search-button {
@@ -373,7 +356,7 @@ export default {
   display: flex;
   justify-content: center;
   gap: 20px;
-  margin: 20px auto 40px;
+  margin: 0 auto 40px;
   flex-wrap: wrap;
   max-width: 900px;
 }

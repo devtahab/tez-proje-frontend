@@ -5,17 +5,26 @@
       <span class="system-name">LibPoint Kütüphane Sistemi</span>
     </div>
     <div class="navbar-right">
+      <router-link to="/" class="nav-link">Ana Sayfa</router-link>
+      <router-link to="/hakkimizda" class="nav-link">Hakkımızda</router-link>
       <a href="#" class="nav-link">Rezervasyon</a>
-      <a href="#" class="nav-link">Arama</a>
+      <router-link to="/kitaplar" class="nav-link">Kitaplar</router-link>
 
-      <div class="dropdown">
+      <!-- Kullanıcı giriş yapmadıysa -->
+      <div v-if="!isLoggedIn" class="auth-buttons">
+        <router-link to="/login" class="nav-link">Giriş Yap</router-link>
+        <router-link to="/signup" class="nav-link">Kayıt Ol</router-link>
+      </div>
+
+      <!-- Kullanıcı giriş yaptıysa -->
+      <div v-else class="dropdown">
         <button class="dropdown-toggle" @click="toggleDropdown">
           Kullanıcı
         </button>
         <ul v-if="showDropdown" class="dropdown-menu">
           <li><a href="#">Profil</a></li>
           <li><a href="#">Ayarlar</a></li>
-          <li><a href="#">Çıkış</a></li>
+          <li><a href="#" @click="logout">Çıkış</a></li>
         </ul>
       </div>
 
@@ -30,6 +39,7 @@ export default {
   data() {
     return {
       showDropdown: false,
+      isLoggedIn: false, // Bu değer gerçek uygulamada bir auth store'dan gelecek
     };
   },
   methods: {
@@ -39,6 +49,11 @@ export default {
     setTheme(mode) {
       document.documentElement.setAttribute("data-theme", mode);
     },
+    logout() {
+      // Burada logout işlemi yapılacak
+      this.isLoggedIn = false;
+      this.$router.push('/');
+    }
   },
 };
 </script>
@@ -78,6 +93,13 @@ export default {
 .nav-link {
   color: var(--text-color);
   text-decoration: none;
+}
+
+.auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: 2rem;
 }
 
 .dropdown {
