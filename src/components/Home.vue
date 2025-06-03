@@ -27,8 +27,8 @@
     </div>
     
     <div class="reservation-container">
-      <router-link to="/reservation" class="reservation-link">
-        <div class="reservation-label">Reservation</div>
+      <router-link to="/rezervasyon" class="reservation-link">
+        <div class="reservation-label">Rezervasyon</div>
         <img src="/reservation.jpg" alt="Reservation" class="reservation-image">
       </router-link>
     </div>

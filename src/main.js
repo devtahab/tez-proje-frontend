@@ -14,6 +14,7 @@ import Help from './components/Help.vue';
 import Books from './components/Books.vue';
 import Login from './components/Login.vue';
 import SignUp from './components/SignUp.vue';
+import Reservation from './components/Reservation.vue';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,9 +22,10 @@ const router = createRouter({
         { path: '/', component: Home },
         { path: '/hakkimizda', component: About },
         { path: '/yardim', component: Help },
+        { path: '/rezervasyon', component: Reservation },
         { path: '/kitaplar', component: Books },
-        { path: '/login', component: Login },
-        { path: '/signup', component: SignUp }
+        { path: '/giris-yap', component: Login },
+        { path: '/kayit-ol', component: SignUp }
     ]
 })
 

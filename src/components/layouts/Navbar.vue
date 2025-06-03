@@ -7,13 +7,13 @@
     <div class="navbar-right">
       <router-link to="/" class="nav-link">Ana Sayfa</router-link>
       <router-link to="/hakkimizda" class="nav-link">Hakkımızda</router-link>
-      <a href="#" class="nav-link">Rezervasyon</a>
+      <router-link to="/rezervasyon" class="nav-link">Rezervasyon</router-link>
       <router-link to="/kitaplar" class="nav-link">Kitaplar</router-link>
 
       <!-- Kullanıcı giriş yapmadıysa -->
       <div v-if="!isLoggedIn" class="auth-buttons">
-        <router-link to="/login" class="nav-link">Giriş Yap</router-link>
-        <router-link to="/signup" class="nav-link">Kayıt Ol</router-link>
+        <router-link to="/giris-yap" class="nav-link">Giriş Yap</router-link>
+        <router-link to="/kayit-ol" class="nav-link">Kayıt Ol</router-link>
       </div>
 
       <!-- Kullanıcı giriş yaptıysa -->

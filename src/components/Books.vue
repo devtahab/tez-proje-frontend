@@ -74,31 +74,181 @@
       <div class="book-modal" v-if="selectedBook" @click.self="closeModal">
         <div class="modal-content">
           <button class="close-button" @click="closeModal">×</button>
-          <div class="modal-book-details">
-            <div class="modal-book-cover">
-              <img :src="selectedBook.coverImage" :alt="selectedBook.title">
+          
+          <!-- Tab Navigation -->
+          <div class="modal-tabs">
+            <button 
+              class="tab-button" 
+              :class="{ 'active': activeTab === 'info' }"
+              @click="activeTab = 'info'"
+            >
+              Kitap Bilgisi
+            </button>
+            <button 
+              class="tab-button" 
+              :class="{ 'active': activeTab === 'comments' }"
+              @click="activeTab = 'comments'"
+            >
+              Yorumlar ({{ selectedBook.comments.length }})
+            </button>
+          </div>
+          
+          <!-- Book Info Tab -->
+          <div v-if="activeTab === 'info'" class="tab-content">
+            <div class="modal-book-details">
+              <div class="modal-book-cover">
+                <img :src="selectedBook.coverImage" :alt="selectedBook.title">
+              </div>
+              <div class="modal-book-info">
+                <h2>{{ selectedBook.title }}</h2>
+                <p class="modal-book-author">Yazar: {{ selectedBook.author }}</p>
+                <p class="modal-book-year">Yayın Yılı: {{ selectedBook.year }}</p>
+                <p class="modal-book-genre">Tür: {{ selectedBook.genre }}</p>
+                
+                <!-- Rating Section -->
+                <div class="rating-section">
+                  <div class="current-rating">
+                    <span class="rating-label">Puan Ver:</span>
+                    <div class="stars-display">
+                      <svg 
+                        v-for="star in 5" 
+                        :key="`display-${star}`"
+                        class="star interactive"
+                        :class="{ 
+                          'filled': star <= selectedBook.rating,
+                          'hover': star <= hoverRating && hoverRating > 0,
+                          'selected': star <= tempRating && tempRating > 0
+                        }"
+                        @mouseover="hoverRating = star"
+                        @mouseleave="hoverRating = 0"
+                        @click="rateBook(selectedBook, star)"
+                        xmlns="http://www.w3.org/2000/svg" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                      </svg>
+                      <span class="rating-text">({{ selectedBook.rating }}/5)</span>
+                    </div>
+                    <p class="rating-hint">Puan vermek için yıldızlara tıklayın</p>
+                  </div>
+                </div>
+                
+                <p class="modal-book-description">{{ selectedBook.description }}</p>
+                <div class="modal-book-status">
+                  <span :class="['status-indicator', selectedBook.available ? 'available' : 'not-available']"></span>
+                  {{ selectedBook.available ? 'Mevcut' : 'Ödünç Verilmiş' }}
+                </div>
+                
+                <div class="modal-actions">
+                  <button 
+                    class="borrow-button" 
+                    :class="{ 'disabled': !selectedBook.available }"
+                    :disabled="!selectedBook.available"
+                    @click="borrowBook(selectedBook)"
+                  >
+                    Ödünç Al
+                  </button>
+                </div>
+              </div>
             </div>
-            <div class="modal-book-info">
-              <h2>{{ selectedBook.title }}</h2>
-              <p class="modal-book-author">Yazar: {{ selectedBook.author }}</p>
-              <p class="modal-book-year">Yayın Yılı: {{ selectedBook.year }}</p>
-              <p class="modal-book-genre">Tür: {{ selectedBook.genre }}</p>
-              <p class="modal-book-description">{{ selectedBook.description }}</p>
-              <div class="modal-book-status">
-                <span :class="['status-indicator', selectedBook.available ? 'available' : 'not-available']"></span>
-                {{ selectedBook.available ? 'Mevcut' : 'Ödünç Verilmiş' }}
+          </div>
+          
+          <!-- Comments Tab -->
+          <div v-else-if="activeTab === 'comments'" class="tab-content">
+            <div class="comments-section">
+              
+              <!-- Add Comment Form -->
+              <div class="add-comment-section">
+                <h3>Yorum Yaz</h3>
+                
+                <!-- Success Message -->
+                <div v-if="commentSubmitted" class="comment-success">
+                  ✅ Yorumunuz başarıyla eklendi!
+                </div>
+                
+                <div class="comment-form">
+                  <input 
+                    type="text" 
+                    placeholder="Adınız" 
+                    class="comment-input"
+                    v-model="newComment.userName"
+                  />
+                  <div class="comment-rating-input">
+                    <span>Puanınız:</span>
+                    <div class="comment-stars">
+                      <svg 
+                        v-for="star in 5" 
+                        :key="`new-comment-star-${star}`"
+                        class="star interactive small"
+                        :class="{ 
+                          'filled': star <= newComment.rating,
+                          'hover': star <= newCommentHover && newCommentHover > 0
+                        }"
+                        @mouseover="newCommentHover = star"
+                        @mouseleave="newCommentHover = 0"
+                        @click="newComment.rating = star"
+                        xmlns="http://www.w3.org/2000/svg" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <textarea 
+                    placeholder="Yorumunuzu yazın..." 
+                    class="comment-textarea"
+                    v-model="newComment.text"
+                  ></textarea>
+                  <button 
+                    class="submit-comment-button"
+                    @click="submitComment"
+                    :disabled="!canSubmitComment"
+                  >
+                    Yorum Gönder
+                  </button>
+                </div>
               </div>
               
-              <div class="modal-actions">
-                <button 
-                  class="borrow-button" 
-                  :class="{ 'disabled': !selectedBook.available }"
-                  :disabled="!selectedBook.available"
-                  @click="borrowBook(selectedBook)"
-                >
-                  Ödünç Al
-                </button>
+              <!-- Existing Comments -->
+              <div v-if="selectedBook.comments.length === 0" class="no-comments">
+                <p>Bu kitap için henüz yorum yapılmamış.</p>
+                <p>İlk yorumu siz yazın!</p>
               </div>
+              
+              <div v-else class="comments-list">
+                <h4 class="comments-title">Yapılan Yorumlar ({{ selectedBook.comments.length }})</h4>
+                <div 
+                  v-for="comment in selectedBook.comments" 
+                  :key="comment.id"
+                  class="comment-card"
+                >
+                  <div class="comment-header">
+                    <div class="comment-user">
+                      <div class="user-avatar">
+                        {{ comment.userName.charAt(0) }}
+                      </div>
+                      <div class="user-info">
+                        <span class="user-name">{{ comment.userName }}</span>
+                        <span class="comment-date">{{ formatDate(comment.date) }}</span>
+                      </div>
+                    </div>
+                    <div class="comment-rating">
+                      <svg 
+                        v-for="star in 5" 
+                        :key="`comment-${comment.id}-star-${star}`"
+                        class="comment-star"
+                        :class="{ 'filled': star <= comment.rating }"
+                        xmlns="http://www.w3.org/2000/svg" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <p class="comment-text">{{ comment.comment }}</p>
+                </div>
+              </div>
+              
             </div>
           </div>
         </div>
@@ -115,6 +265,16 @@ export default {
       selectedBook: null,
       currentPage: 1,
       itemsPerPage: 8,
+      hoverRating: 0,
+      tempRating: 0,
+      activeTab: 'info', // 'info' veya 'comments'
+      newComment: {
+        userName: '',
+        rating: 0,
+        text: ''
+      },
+      newCommentHover: 0,
+      commentSubmitted: false, // Yorum gönderildi göstergesi
       books: [
         {
           id: 1,
@@ -124,7 +284,24 @@ export default {
           genre: 'Roman',
           description: 'Raskolnikov adlı fakir bir gencin işlediği cinayet sonrasında yaşadığı psikolojik çöküntüyü anlatan dünya klasiklerinden bir eser.',
           coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11439747/wh:true/wi:220',
-          available: true
+          available: true,
+          rating: 4.8,
+          comments: [
+            {
+              id: 1,
+              userName: 'Mehmet K.',
+              rating: 5,
+              comment: 'Dostoyevski\'nin bu muhteşem eseri, insan psikolojisini çok derinlemesine işliyor. Kesinlikle okunması gereken bir klasik.',
+              date: '2024-01-15'
+            },
+            {
+              id: 2,
+              userName: 'Ayşe M.',
+              rating: 4,
+              comment: 'Ağır bir roman ama o kadar değerli ki. Raskolnikov karakteri unutulmaz.',
+              date: '2024-01-10'
+            }
+          ]
         },
         {
           id: 2,
@@ -134,7 +311,17 @@ export default {
           genre: 'Fantastik',
           description: 'Bir pilotun çölde tanıştığı küçük prensin hikayesini anlatan, çocuklar için yazılmış ancak tüm yaşlara hitap eden felsefi bir masal.',
           coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11456461/wh:true/wi:220',
-          available: true
+          available: true,
+          rating: 4.6,
+          comments: [
+            {
+              id: 1,
+              userName: 'Zeynep T.',
+              rating: 5,
+              comment: 'Çocukken okumuştum, yetişkin olarak tekrar okuduğumda çok daha derin anlamlar keşfettim.',
+              date: '2024-01-12'
+            }
+          ]
         },
         {
           id: 3,
@@ -144,7 +331,9 @@ export default {
           genre: 'Distopya',
           description: 'Büyük Birader\'in gözetimindeki totaliter bir dünyada yaşayan Winston Smith\'in hikayesini anlatan, distopik kurgu klasiklerinden.',
           coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11453559/wh:true/wi:220',
-          available: false
+          available: false,
+          rating: 4.7,
+          comments: []
         },
         {
           id: 4,
@@ -154,7 +343,17 @@ export default {
           genre: 'Roman',
           description: 'Santiago adlı çobanın kişisel efsanesini gerçekleştirmek için çıktığı yolculuğu anlatan, spiritüel temalar içeren bir başyapıt.',
           coverImage: 'https://i.dr.com.tr/cache/600x600-0/originals/0000000064552-1.jpg',
-          available: true
+          available: true,
+          rating: 4.2,
+          comments: [
+            {
+              id: 1,
+              userName: 'Ali R.',
+              rating: 4,
+              comment: 'Kişisel gelişim açısından faydalı bir kitap. Santiago\'nun yolculuğu ilham verici.',
+              date: '2024-01-08'
+            }
+          ]
         },
         {
           id: 5,
@@ -164,7 +363,9 @@ export default {
           genre: 'Roman',
           description: 'Jean Valjean\'ın adaletsizlik, kefaret ve kurtuluş arayışı hikayesini anlatan, Fransız edebiyatının en önemli eserlerinden biri.',
           coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11580789/wh:true/wi:220',
-          available: true
+          available: true,
+          rating: 4.5,
+          comments: []
         },
         {
           id: 6,
@@ -174,7 +375,9 @@ export default {
           genre: 'Roman',
           description: 'Brezilya\'nın yoksul kesiminde büyüyen Zezé adlı küçük bir çocuğun hayata tutunma çabasını anlatan dokunaklı bir hikaye.',
           coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11454466/wh:true/wi:220',
-          available: false
+          available: false,
+          rating: 4.3,
+          comments: []
         },
         {
           id: 7,
@@ -184,7 +387,24 @@ export default {
           genre: 'Fantastik',
           description: 'Yüzük taşıyıcısı Frodo Baggins\'in Tek Yüzük\'ü yok etmek için çıktığı tehlikeli yolculuğu anlatan epik fantastik kurgu serisi.',
           coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11675124/wh:true/wi:220',
-          available: true
+          available: true,
+          rating: 4.9,
+          comments: [
+            {
+              id: 1,
+              userName: 'Cem Y.',
+              rating: 5,
+              comment: 'Fantastik edebiyatın başyapıtı! Tolkien\'in hayal dünyası mükemmel.',
+              date: '2024-01-05'
+            },
+            {
+              id: 2,
+              userName: 'Elif K.',
+              rating: 5,
+              comment: 'Her okuduğumda yeni detaylar keşfediyorum. Muhteşem bir eser.',
+              date: '2024-01-03'
+            }
+          ]
         },
         {
           id: 8,
@@ -194,7 +414,9 @@ export default {
           genre: 'Macera',
           description: 'Yukon\'da yaşayan kurt köpeği White Fang\'in vahşi doğadan evcilleştirilmeye giden yolculuğunu anlatan klasik bir macera romanı.',
           coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:1249760/wh:true/wi:220',
-          available: true
+          available: true,
+          rating: 4.1,
+          comments: []
         },
         {
           id: 9,
@@ -204,7 +426,9 @@ export default {
           genre: 'Absürt',
           description: 'Gregor Samsa\'nın bir sabah uyandığında kendini dev bir böceğe dönüşmüş olarak bulmasıyla başlayan absürt ve alegorik hikaye.',
           coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11457886/wh:true/wi:220',
-          available: false
+          available: false,
+          rating: 4.4,
+          comments: []
         },
         {
           id: 10,
@@ -214,7 +438,9 @@ export default {
           genre: 'Novella',
           description: 'Bir transatlantik gemisinde satranç ustası Mirko Czentovic ile diğer yolcular arasındaki psikolojik satranç mücadelesini konu alan novella.',
           coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11494042/wh:true/wi:220',
-          available: true
+          available: true,
+          rating: 4.0,
+          comments: []
         },
         {
           id: 11,
@@ -224,7 +450,9 @@ export default {
           genre: 'Roman',
           description: 'Afganistan\'dan Amerika\'ya uzanan ve dostluk, ihanet, pişmanlık ve kurtuluş temalarını işleyen etkileyici bir hikaye.',
           coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11456053/wh:true/wi:220',
-          available: true
+          available: true,
+          rating: 4.6,
+          comments: []
         },
         {
           id: 12,
@@ -234,7 +462,9 @@ export default {
           genre: 'Alegorik',
           description: 'Bir çiftlikte hayvanların insanlara karşı ayaklanmasını ve sonrasında gelişen olayları anlatan, Sovyet rejimini eleştiren alegorik bir roman.',
           coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11429373/wh:true/wi:220',
-          available: false
+          available: false,
+          rating: 4.3,
+          comments: []
         },
         {
           id: 13,
@@ -244,7 +474,9 @@ export default {
           genre: 'Roman',
           description: 'Amerikan Güneyi\'nde ırkçılık ve adaletsizliğe karşı mücadele eden bir avukat ve onun çocuklarının hikayesini anlatan Pulitzer ödüllü roman.',
           coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11450211/wh:true/wi:220',
-          available: true
+          available: true,
+          rating: 4.5,
+          comments: []
         },
         {
           id: 14,
@@ -254,7 +486,9 @@ export default {
           genre: 'Absürdizm',
           description: 'Toplumsal normlara kayıtsız kalan ve bir Arap\'ı öldürdükten sonra yargılanan Meursault\'un hikayesini anlatan varoluşçu roman.',
           coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11463051/wh:true/wi:220',
-          available: true
+          available: true,
+          rating: 4.2,
+          comments: []
         },
         {
           id: 15,
@@ -264,7 +498,9 @@ export default {
           genre: 'Roman',
           description: 'Afganistan\'da farklı kuşaklardan iki kadının hayatlarının kesişmesini ve dostluklarını anlatan duygusal bir roman.',
           coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11456093/wh:true/wi:220',
-          available: false
+          available: false,
+          rating: 4.4,
+          comments: []
         },
         {
           id: 16,
@@ -274,7 +510,9 @@ export default {
           genre: 'Roman',
           description: 'Büyük Buhran döneminde Kaliforniya\'da çalışan iki gezgin tarım işçisinin dostluğunu ve hayallerini anlatan bir klasik.',
           coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11452999/wh:true/wi:220',
-          available: true
+          available: true,
+          rating: 4.1,
+          comments: []
         },
         {
           id: 17,
@@ -284,7 +522,9 @@ export default {
           genre: 'Felsefi',
           description: 'Sürüsünün geleneklerini reddederek uçmanın sınırlarını zorlamaya çalışan bir martının kendini gerçekleştirme yolculuğu.',
           coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:6559238/wh:true/wi:220',
-          available: true
+          available: true,
+          rating: 3.9,
+          comments: []
         },
         {
           id: 18,
@@ -294,7 +534,9 @@ export default {
           genre: 'Roman',
           description: 'Bacağındaki kemik hastalığı yüzünden hastane hastane dolaşan bir gencin acılarını, aşkını ve hayata tutunma çabasını anlatan otobiyografik roman.',
           coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11568693/wh:true/wi:220',
-          available: false
+          available: false,
+          rating: 4.0,
+          comments: []
         }
       ]
     }
@@ -339,6 +581,11 @@ export default {
       }
       
       return pages;
+    },
+    canSubmitComment() {
+      return this.newComment.userName.trim() !== '' && 
+             this.newComment.rating > 0 && 
+             this.newComment.text.trim() !== '';
     }
   },
   methods: {
@@ -348,10 +595,18 @@ export default {
     },
     selectBook(book) {
       this.selectedBook = book;
+      this.hoverRating = 0;
+      this.tempRating = 0;
+      this.activeTab = 'info'; // Reset to info tab
+      this.resetCommentForm(); // Reset comment form
       document.body.style.overflow = 'hidden'; // Modal açıkken scroll'u engelle
     },
     closeModal() {
       this.selectedBook = null;
+      this.hoverRating = 0;
+      this.tempRating = 0;
+      this.activeTab = 'info';
+      this.resetCommentForm();
       document.body.style.overflow = ''; // Scroll'u geri etkinleştir
     },
     changePage(page) {
@@ -369,6 +624,57 @@ export default {
         // Gerçek uygulamada burada API isteği yapılabilir
         // book.available = false; // Kitabın durumunu güncelleyebiliriz
       }
+    },
+    rateBook(book, rating) {
+      // Burada kitap puanı verme işlemleri yapılabilir
+      // Şimdilik basit bir alert gösterelim
+      alert(`"${book.title}" kitabına ${rating} yıldız verdiniz.`);
+      // Gerçek uygulamada burada API isteği yapılabilir
+      // book.rating = rating; // Kitabın puanını güncelleyebiliriz
+    },
+    resetCommentForm() {
+      this.newComment = {
+        userName: '',
+        rating: 0,
+        text: ''
+      };
+      this.newCommentHover = 0;
+      this.commentSubmitted = false;
+    },
+    formatDate(date) {
+      const options = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      };
+      return new Date(date).toLocaleDateString('tr-TR', options);
+    },
+    submitComment() {
+      if (!this.canSubmitComment) return;
+      
+      // Yeni yorum objesi oluştur
+      const newComment = {
+        id: Date.now(), // Basit ID oluşturma
+        userName: this.newComment.userName.trim(),
+        rating: this.newComment.rating,
+        comment: this.newComment.text.trim(),
+        date: new Date().toISOString().split('T')[0] // Bugünün tarihi (YYYY-MM-DD)
+      };
+      
+      // Yorumu kitabın comments dizisine ekle
+      this.selectedBook.comments.push(newComment);
+      
+      // Form'u temizle
+      this.resetCommentForm();
+      
+      // Başarı göstergesi göster ve 3 saniye sonra gizle
+      this.commentSubmitted = true;
+      setTimeout(() => {
+        this.commentSubmitted = false;
+      }, 3000);
+      
+      // İsteğe bağlı: küçük bir başarı mesajı
+      // alert('Yorumunuz başarıyla eklendi!');
     }
   }
 }
@@ -596,10 +902,44 @@ export default {
   z-index: 1;
 }
 
+.modal-tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tab-button {
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #6B7280;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.tab-button:hover {
+  color: #1F2937;
+  background-color: #f8f9fa;
+}
+
+.tab-button.active {
+  color: #1F2937;
+  border-bottom-color: #1F2937;
+  background-color: transparent;
+}
+
+.tab-content {
+  padding: 1.5rem 2rem 2rem;
+}
+
 .modal-book-details {
   display: flex;
   flex-direction: column;
-  padding: 2rem;
 }
 
 @media (min-width: 768px) {
@@ -756,6 +1096,325 @@ export default {
     padding: 0.4rem 0.6rem;
     margin: 0 0.125rem;
     min-width: 2rem;
+  }
+}
+
+/* Rating styles */
+.rating-section {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.current-rating {
+  margin-bottom: 0;
+}
+
+.rating-label {
+  display: block;
+  font-weight: 600;
+  color: #1F2937;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.stars-display {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.star {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.star path {
+  fill: #d1d5db;
+  stroke: #9ca3af;
+  stroke-width: 1;
+  transition: all 0.2s ease;
+}
+
+.star.filled path {
+  fill: #fbbf24;
+  stroke: #f59e0b;
+}
+
+.star.interactive:hover path,
+.star.hover path {
+  fill: #fbbf24;
+  stroke: #895906;
+}
+
+.star.selected path {
+  fill: #f59e0b;
+  stroke: #d97706;
+}
+
+.star.interactive:hover {
+  transform: scale(1.15);
+}
+
+.rating-text {
+  margin-left: 0.5rem;
+  color: #6b7280;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.rating-hint {
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+  font-size: 0.8rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* Comments Section Styles */
+.comments-section {
+  padding: 0;
+}
+
+.no-comments {
+  text-align: center;
+  padding: 3rem;
+  color: #6b7280;
+}
+
+.no-comments p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.comments-list {
+  margin-bottom: 0;
+}
+
+.comments-title {
+  margin: 0 0 1rem 0;
+  color: #1F2937;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 0.5rem;
+}
+
+.comment-card {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.comment-user {
+  display: flex;
+  align-items: center;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #1F2937;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 0.75rem;
+  font-size: 1.1rem;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #1F2937;
+  font-size: 0.9rem;
+}
+
+.comment-date {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.comment-rating {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.comment-star {
+  width: 16px;
+  height: 16px;
+}
+
+.comment-star path {
+  fill: #d1d5db;
+  stroke: #9ca3af;
+  stroke-width: 1;
+}
+
+.comment-star.filled path {
+  fill: #fbbf24;
+  stroke: #f59e0b;
+}
+
+.comment-text {
+  color: #4B5563;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.add-comment-section {
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.add-comment-section h3 {
+  margin: 0 0 1rem 0;
+  color: #1F2937;
+  font-size: 1.2rem;
+}
+
+.comment-success {
+  background-color: #d1fae5;
+  color: #065f46;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  border: 1px solid #a7f3d0;
+  font-weight: 500;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.comment-input {
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.comment-input:focus {
+  border-color: #1F2937;
+}
+
+.comment-rating-input {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.comment-rating-input span {
+  color: #1F2937;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.comment-stars {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.star.small {
+  width: 18px;
+  height: 18px;
+}
+
+.comment-textarea {
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.3s;
+  min-height: 80px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.comment-textarea:focus {
+  border-color: #1F2937;
+}
+
+.submit-comment-button {
+  background-color: #1F2937;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  align-self: flex-start;
+}
+
+.submit-comment-button:hover:not(:disabled) {
+  background-color: #111827;
+  transform: translateY(-1px);
+}
+
+.submit-comment-button:disabled {
+  background-color: #9CA3AF;
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+}
+
+/* Responsive Comments */
+@media (max-width: 768px) {
+  .comment-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .comment-rating-input {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .user-avatar {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
   }
 }
 </style> 
