@@ -28,8 +28,10 @@
         </ul>
       </div>
 
-      <button class="theme-button" @click="setTheme('normal')">🌗</button>
-      <button class="theme-button" @click="setTheme('colorblind')">🟠🔵</button>
+      <img v-if="this.lightsOn" class="light_switch" src="/images/açık_ışık.png" @click="toggle_lights()">
+      <img v-if="!this.lightsOn" class="light_switch" src="/images/kapalı_ışık.png" @click="toggle_lights()">
+      <img v-if="!this.colorBlind" class="colorblind_button" src="/images/color_blind_off.png" @click="toggle_colors()">
+      <img v-if="this.colorBlind" class="colorblind_button" src="/images/color_blind_on.png" @click="toggle_colors()">
     </div>
   </nav>
 </template>
@@ -40,14 +42,33 @@ export default {
     return {
       showDropdown: false,
       isLoggedIn: false, // Bu değer gerçek uygulamada bir auth store'dan gelecek
+      lightsOn: true,
+      colorBlind: false
     };
   },
   methods: {
     toggleDropdown() {
       this.showDropdown = !this.showDropdown;
     },
-    setTheme(mode) {
-      document.documentElement.setAttribute("data-theme", mode);
+    toggle_lights(){
+      if(this.lightsOn){
+        this.lightsOn = false;
+        alert("Işıklar kapandı!");
+      }
+      else{
+        this.lightsOn = true;
+        alert("Işıklar açıldı!");
+      }
+    },
+    toggle_colors(){
+      if(!this.colorBlind){
+        this.colorBlind = true;
+        alert("Renk körüsünüz!");
+      }
+      else{
+        this.colorBlind = false;
+        alert("Renk körü değilsiniz!");
+      }
     },
     logout() {
       // Burada logout işlemi yapılacak
@@ -135,14 +156,20 @@ export default {
   color: black;
 }
 
-.theme-button {
-  background: none;
-  border: 1px solid var(--text-color);
-  color: var(--text-color);
-  padding: 0.25rem 0.5rem;
+.light_switch{
+  width: 30px;
+  height: 30px;
+  margin-top: 6px;
   cursor: pointer;
-  border-radius: 4px;
 }
+
+.colorblind_button{
+  width: 30px;
+  height: 30px;
+  margin-top: 6px;
+  cursor: pointer;
+}
+
 </style>
 
 <!-- Tema için global CSS (örneğin App.vue veya main.css içinde olabilir) -->

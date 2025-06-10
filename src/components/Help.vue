@@ -126,6 +126,7 @@ export default {
 .help-page {
   background-color: #f8fafc;
   min-height: 80vh;
+  padding: 10px 0 20px;
 }
 
 /* Hero Bölümü */

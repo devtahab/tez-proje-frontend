@@ -41,7 +41,7 @@
           
           <div class="form-footer">
             Hesabınız yok mu? 
-            <router-link to="/signup" class="signup-link">Kayıt Ol</router-link>
+            <router-link to="/kayit-ol" class="signup-link">Kayıt Ol</router-link>
           </div>
           
           <div v-if="errors.general" class="error-message">

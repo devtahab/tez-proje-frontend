@@ -6,15 +6,27 @@
       <div class="form-container">
         <form @submit.prevent="register" class="signup-form">
           <div class="form-group">
-            <label for="fullName">Ad Soyad</label>
+            <label for="name">Ad</label>
             <input 
               type="text" 
-              id="fullName" 
-              v-model="form.fullName" 
+              id="name" 
+              v-model="form.name" 
               class="form-input" 
               required
             />
-            <div class="form-error" v-if="errors.fullName">{{ errors.fullName }}</div>
+            <div class="form-error" v-if="errors.name">{{ errors.name }}</div>
+          </div>
+
+          <div class="form-group">
+            <label for="surname">Soyad</label>
+            <input 
+              type="text" 
+              id="surname" 
+              v-model="form.surname" 
+              class="form-input" 
+              required
+            />
+            <div class="form-error" v-if="errors.surname">{{ errors.surname }}</div>
           </div>
           
           <div class="form-group">
@@ -52,6 +64,20 @@
             />
             <div class="form-error" v-if="errors.confirmPassword">{{ errors.confirmPassword }}</div>
           </div>
+
+          <div class="form-group">
+            <label for="phone">Telefon</label>
+            <input 
+              type="tel"
+              placeholder="1234 123 12 12"
+              pattern="[0-9]{4} [0-9]{3} [0-9]{2} [0-9]{2}"
+              id="phone" 
+              v-model="form.phone" 
+              class="form-input" 
+              required
+            />
+            <div class="form-error" v-if="errors.phone">{{ errors.phone }}</div>
+          </div>
           
           <div class="form-group">
             <button type="submit" class="submit-button" :disabled="isSubmitting">
@@ -61,7 +87,7 @@
           
           <div class="form-footer">
             Zaten hesabınız var mı? 
-            <router-link to="/login" class="login-link">Giriş Yap</router-link>
+            <router-link to="/giris-yap" class="login-link">Giriş Yap</router-link>
           </div>
           
           <div v-if="successMessage" class="success-message">
@@ -74,20 +100,25 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
       form: {
-        fullName: '',
+        name: '',
+        surname: '',
         email: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        phone: ''
       },
       errors: {
-        fullName: '',
+        name: '',
+        surname: '',
         email: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        phone: ''
       },
       isSubmitting: false,
       successMessage: ''
@@ -97,14 +128,21 @@ export default {
     validateForm() {
       let isValid = true;
       this.errors = {
-        fullName: '',
+        name: '',
+        surname: '',
         email: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        phone: ''
       };
       
-      if (!this.form.fullName.trim()) {
-        this.errors.fullName = 'Ad Soyad alanı zorunludur';
+      if (!this.form.name.trim()) {
+        this.errors.name = 'Ad alanı zorunludur';
+        isValid = false;
+      }
+
+      if (!this.form.surname.trim()) {
+        this.errors.surname = 'Ad alanı zorunludur';
         isValid = false;
       }
       
@@ -146,11 +184,6 @@ export default {
       this.isSubmitting = true;
       
       try {
-        // Burada API'ye kayıt isteği yapılacak
-        // Örnek: const response = await api.register(this.form);
-        
-        // API isteği simülasyonu
-        await new Promise(resolve => setTimeout(resolve, 1000));
         
         // Başarılı kayıt sonrası
         this.successMessage = 'Kayıt işlemi başarıyla tamamlandı! Giriş sayfasına yönlendiriliyorsunuz...';
@@ -165,7 +198,7 @@ export default {
         
         // Giriş sayfasına yönlendirme
         setTimeout(() => {
-          this.$router.push('/login');
+          this.$router.push('/giris-yap');
         }, 2000);
         
       } catch (error) {
