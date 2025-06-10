@@ -44,9 +44,14 @@
             <router-link to="/kayit-ol" class="signup-link">Kayıt Ol</router-link>
           </div>
           
-          <div v-if="errors.general" class="error-message">
-            {{ errors.general }}
+          <div v-if="successMessage" class="success-message">
+            {{ successMessage }}
           </div>
+
+          <div v-if="failMessage" class="fail-message">
+            {{ failMessage }}
+          </div>
+
         </form>
       </div>
     </div>
@@ -54,6 +59,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 export default {
   data() {
     return {
@@ -63,10 +70,11 @@ export default {
       },
       errors: {
         email: '',
-        password: '',
-        general: ''
+        password: ''
       },
-      isSubmitting: false
+      isSubmitting: false,
+      successMessage: '',
+      failMessage: ''
     }
   },
   methods: {
@@ -74,8 +82,7 @@ export default {
       let isValid = true;
       this.errors = {
         email: '',
-        password: '',
-        general: ''
+        password: ''
       };
       
       if (!this.form.email.trim()) {
@@ -105,19 +112,25 @@ export default {
       this.isSubmitting = true;
       
       try {
-        // Burada API'ye giriş isteği yapılacak
-        // Örnek: const response = await api.login(this.form);
-        
-        // API isteği simülasyonu
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Başarılı giriş sonrası ana sayfaya yönlendirme
-        this.$router.push('/');
+        console.log(this.form);
+        let response = await axios.post("http://35.158.197.224/api/auth/login", {
+          email: this.form.email,
+          password: this.form.password
+        });
+
+        console.log(response.data);
+
+        this.failMessage = '';
+        this.successMessage = 'Hoşgeldiniz!'
+
+        setTimeout(() => {
+          this.$router.push('/');
+        }, 2000);
         
       } catch (error) {
         // Hata durumunda
         console.error('Giriş hatası:', error);
-        this.errors.general = 'E-posta veya şifre hatalı. Lütfen tekrar deneyin.';
+        this.failMessage = 'E-posta veya şifre hatalı. Lütfen tekrar deneyin.';
       } finally {
         this.isSubmitting = false;
       }
@@ -251,9 +264,18 @@ label {
   text-decoration: underline;
 }
 
-.error-message {
-  background-color: #FEE2E2;
-  color: #B91C1C;
+.success-message {
+  background-color: #D1FAE5;
+  color: #065F46;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.fail-message {
+  background-color: #ff0000;
+  color: #ffffff;
   padding: 1rem;
   border-radius: 8px;
   margin-top: 1rem;

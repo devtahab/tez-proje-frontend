@@ -93,6 +93,10 @@
           <div v-if="successMessage" class="success-message">
             {{ successMessage }}
           </div>
+
+          <div v-if="failMessage" class="fail-message">
+            {{ failMessage }}
+          </div>
         </form>
       </div>
     </div>
@@ -100,6 +104,8 @@
 </template>
 
 <script>
+  import axios from "axios";
+  import { jwtDecode } from "jwt-decode";
 
 export default {
   data() {
@@ -121,7 +127,8 @@ export default {
         phone: ''
       },
       isSubmitting: false,
-      successMessage: ''
+      successMessage: '',
+      failMessage: ''
     }
   },
   methods: {
@@ -184,7 +191,18 @@ export default {
       this.isSubmitting = true;
       
       try {
-        
+        console.log(this.form);
+        let response = await axios.post("http://35.158.197.224/api/auth/register", {
+          name: this.form.name,
+          surname: this.form.surname,
+          email: this.form.email,
+          phoneNumber: this.form.phone,
+          password: this.form.password
+        });
+
+        console.log(response.data);
+
+        this.failMessage = '';
         // Başarılı kayıt sonrası
         this.successMessage = 'Kayıt işlemi başarıyla tamamlandı! Giriş sayfasına yönlendiriliyorsunuz...';
         
@@ -204,7 +222,7 @@ export default {
       } catch (error) {
         // Hata durumunda
         console.error('Kayıt hatası:', error);
-        this.errors.general = 'Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.';
+        this.failMessage = 'Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.';
       } finally {
         this.isSubmitting = false;
       }
@@ -324,6 +342,15 @@ label {
 .success-message {
   background-color: #D1FAE5;
   color: #065F46;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.fail-message {
+  background-color: #ff0000;
+  color: #ffffff;
   padding: 1rem;
   border-radius: 8px;
   margin-top: 1rem;
