@@ -471,7 +471,7 @@
               <!-- Üst Taraf Sandalyeler (1-8) -->
               <div class="chair-row top-row">
                 <div 
-                  v-for="i in 8" 
+                  v-for="i in 3" 
                   :key="'top-' + i"
                   class="chair-seat"
                   :class="{ 
@@ -490,17 +490,17 @@
                 <!-- Sol Taraf Sandalyeler (9-10) -->
                 <div class="chair-column left-column">
                   <div 
-                    v-for="i in 2" 
+                    v-for="i in 1" 
                     :key="'left-' + i"
                     class="chair-seat"
                     :class="{ 
-                      'occupied': chairStatus[i + 7] === 'occupied',
-                      'selected': selectedChairs.includes(i + 7),
-                      'available': chairStatus[i + 7] === 'available'
+                      'occupied': chairStatus[i + 2] === 'occupied',
+                      'selected': selectedChairs.includes(i + 2),
+                      'available': chairStatus[i + 2] === 'available'
                     }"
-                    @click="toggleChair(i + 7)"
+                    @click="toggleChair(i + 2)"
                   >
-                    {{ i + 8 }}
+                    {{ i + 3 }}
                   </div>
                 </div>
                 
@@ -514,17 +514,17 @@
                 <!-- Sağ Taraf Sandalyeler (11-12) -->
                 <div class="chair-column right-column">
                   <div 
-                    v-for="i in 2" 
+                    v-for="i in 1" 
                     :key="'right-' + i"
                     class="chair-seat"
                     :class="{ 
-                      'occupied': chairStatus[i + 9] === 'occupied',
-                      'selected': selectedChairs.includes(i + 9),
-                      'available': chairStatus[i + 9] === 'available'
+                      'occupied': chairStatus[i + 3] === 'occupied',
+                      'selected': selectedChairs.includes(i + 3),
+                      'available': chairStatus[i + 3] === 'available'
                     }"
-                    @click="toggleChair(i + 9)"
+                    @click="toggleChair(i + 3)"
                   >
-                    {{ i + 10 }}
+                    {{ i + 4 }}
                   </div>
                 </div>
               </div>
@@ -532,17 +532,17 @@
               <!-- Alt Taraf Sandalyeler (13-20) -->
               <div class="chair-row bottom-row">
                 <div 
-                  v-for="i in 8" 
+                  v-for="i in 3" 
                   :key="'bottom-' + i"
                   class="chair-seat"
                   :class="{ 
-                    'occupied': chairStatus[i + 11] === 'occupied',
-                    'selected': selectedChairs.includes(i + 11),
-                    'available': chairStatus[i + 11] === 'available'
+                    'occupied': chairStatus[i + 4] === 'occupied',
+                    'selected': selectedChairs.includes(i + 4),
+                    'available': chairStatus[i + 4] === 'available'
                   }"
-                  @click="toggleChair(i + 11)"
+                  @click="toggleChair(i + 4)"
                 >
-                  {{ i + 12 }}
+                  {{ i + 5 }}
                 </div>
               </div>
             </div>
@@ -554,7 +554,7 @@
                 
                 <!-- Sandalyeler Çember Halinde (1-10) -->
                 <div 
-                  v-for="i in 10" 
+                  v-for="i in 4" 
                   :key="'round-' + i"
                   class="chair-seat round-chair"
                   :class="{ 
@@ -679,7 +679,7 @@ export default {
       }
     },
     getChairPosition(index) {
-      const angle = (index * 36) * (Math.PI / 180); // 10 sandalye = 360°/10 = 36°
+      const angle = (index * 90) * (Math.PI / 180); // 4 sandalye = 360°/10 = 36°
       const radius = 120;
       const centerX = 150;
       const centerY = 150;
@@ -703,11 +703,11 @@ export default {
       this.clearSelection();
     },
     getTableCapacity() {
-      // Dikdörtgen masalar 20 kişilik, yuvarlak masalar 10 kişilik
+      // Dikdörtgen masalar 8 kişilik, yuvarlak masalar 4 kişilik
       if (this.isRectangularTable) {
-        return 20; // Dikdörtgen masalar 20 kişilik
+        return 8; // Dikdörtgen masalar 8 kişilik
       } else {
-        return 10; // Yuvarlak masalar 10 kişilik
+        return 4; // Yuvarlak masalar 4 kişilik
       }
     },
     goToBooks() {
