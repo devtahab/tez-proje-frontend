@@ -612,6 +612,9 @@
 </template>
 
 <script>
+  import axios from 'axios';
+  import { jwtDecode } from 'jwt-decode';
+
 export default {
   name: 'LibraryReservation',
   data() {
@@ -620,7 +623,8 @@ export default {
       selectedTableName: '',
       showModal: false,
       selectedChairs: [],
-      chairStatus: [] // 'available', 'occupied'
+      chairStatus: [], // 'available', 'occupied',
+      seats: []
     }
   },
   computed: {
@@ -712,7 +716,16 @@ export default {
     },
     goToBooks() {
       this.$router.push('/kitaplar');
+    },
+    async getSeats(){
+      let response = await axios.get("http://35.158.197.224/api/seat/get-seat-list");
+      console.log(response.data.data);
+      this.seats = response.data.data;
+      console.log(this.seats);
     }
+  },
+  mounted(){
+      this.getSeats();
   }
 }
 </script>
