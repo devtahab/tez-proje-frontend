@@ -16,7 +16,8 @@ import Login from './components/Login.vue';
 import SignUp from './components/SignUp.vue';
 import Reservation from './components/Reservation.vue';
 
-import Test from './components/Test.vue'; // Api responselarını test edip görmek için koydum
+import TestReservation from './components/TestReservation.vue'; // Api responselarını test edip görmek için koydum
+import TestBooks from './components/TestBooks.vue'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,7 +29,8 @@ const router = createRouter({
         { path: '/kitaplar', component: Books },
         { path: '/giris-yap', component: Login },
         { path: '/kayit-ol', component: SignUp },
-        { path: '/test', component: Test }
+        { path: '/test-res', component: TestReservation },
+        { path: '/test-book', component: TestBooks }
     ]
 })
 
