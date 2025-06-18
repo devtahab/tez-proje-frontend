@@ -120,6 +120,10 @@ export default {
 
         console.log(response.data);
 
+        let token = response.data.data.token
+        this.$store.commit('saveToken', token);
+        console.log(jwtDecode(token));
+
         this.failMessage = '';
         this.successMessage = 'Hoşgeldiniz!'
 

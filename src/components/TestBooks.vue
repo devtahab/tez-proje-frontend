@@ -8,7 +8,7 @@
           type="text" 
           v-model="searchQuery" 
           class="search-input" 
-          placeholder="Kitap adı, yazar veya konu ara..."
+          placeholder="Kitap adı veya yazar ara..."
           @input="searchBooks"
         />
         <button class="search-button" @click="searchBooks">
@@ -26,11 +26,11 @@
           @click="selectBook(book)"
         >
           <div class="book-cover">
-            <img :src="book.coverImage" :alt="book.title">
+            <img :src="book.imageUrl" :alt="book.name">
           </div>
           <div class="book-info">
-            <h3 class="book-title">{{ book.title }}</h3>
-            <p class="book-author">{{ book.author }}</p>
+            <h3 class="book-title">{{ book.name }}</h3>
+            <p class="book-author">{{ book.authorName }}</p>
           </div>
         </div>
       </div>
@@ -97,12 +97,12 @@
           <div v-if="activeTab === 'info'" class="tab-content">
             <div class="modal-book-details">
               <div class="modal-book-cover">
-                <img :src="selectedBook.coverImage" :alt="selectedBook.title">
+                <img :src="selectedBook.imageUrl" :alt="selectedBook.title">
               </div>
               <div class="modal-book-info">
                 <h2>{{ selectedBook.title }}</h2>
-                <p class="modal-book-author">Yazar: {{ selectedBook.author }}</p>
-                <p class="modal-book-year">Yayın Yılı: {{ selectedBook.year }}</p>
+                <p class="modal-book-author">Yazar: {{ selectedBook.authorName }}</p>
+                <p class="modal-book-year">Yayın Yılı: {{ selectedBook.publishedYear }}</p>
                 <p class="modal-book-genre">Tür: {{ selectedBook.genre }}</p>
                 
                 <!-- Rating Section -->
@@ -133,15 +133,15 @@
                 
                 <p class="modal-book-description">{{ selectedBook.description }}</p>
                 <div class="modal-book-status">
-                  <span :class="['status-indicator', selectedBook.available ? 'available' : 'not-available']"></span>
-                  {{ selectedBook.available ? 'Mevcut' : 'Ödünç Verilmiş' }}
+                  <span :class="['status-indicator', selectedBook.isAvailable ? 'available' : 'not-available']"></span>
+                  {{ selectedBook.isAvailable ? 'Mevcut' : 'Ödünç Verilmiş' }}
                 </div>
                 
                 <div class="modal-actions">
                   <button 
                     class="borrow-button" 
-                    :class="{ 'disabled': !selectedBook.available }"
-                    :disabled="!selectedBook.available"
+                    :class="{ 'disabled': !selectedBook.isAvailable }"
+                    :disabled="!selectedBook.isAvailable"
                     @click="borrowBook(selectedBook)"
                   >
                     Ödünç Al
@@ -223,11 +223,11 @@
                   <div class="comment-header">
                     <div class="comment-user">
                       <div class="user-avatar">
-                        {{ comment.userName.charAt(0) }}
+                        {{ comment.userName ? comment.userName.charAt(0) : "U" }}
                       </div>
                       <div class="user-info">
-                        <span class="user-name">{{ comment.userName }}</span>
-                        <span class="comment-date">{{ formatDate(comment.date) }}</span>
+                        <span class="user-name">{{ comment.userName ? comment.userName : "Username" }}</span>
+                        <span class="comment-date">{{ comment.date ? formatDate(comment.date) : "2025" }}</span>
                       </div>
                     </div>
                     <div class="comment-rating">
@@ -244,6 +244,7 @@
                     </div>
                   </div>
                   <p class="comment-text">{{ comment.comment }}</p>
+                  <button v-if="comment.appuUserId === userId" class="comment-delete-btn">Sil <i class="bi bi-trash"></i></button>
                 </div>
               </div>
               
@@ -276,56 +277,8 @@ data() {
       },
       newCommentHover: 0,
       commentSubmitted: false, // Yorum gönderildi göstergesi
-      books: [
-        {
-          id: 1, // id
-          title: 'Suç ve Ceza', // name
-          // isbn
-          author: 'Fyodor Dostoyevski', // authorName
-          year: 1866,
-          genre: 'Roman',
-          description: 'Raskolnikov adlı fakir bir gencin işlediği cinayet sonrasında yaşadığı psikolojik çöküntüyü anlatan dünya klasiklerinden bir eser.',
-          coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11439747/wh:true/wi:220', //imageUrl
-          available: true, // isAvailable
-          rating: 4.8,
-          comments: [
-            {
-              id: 1,
-              userName: 'Mehmet K.',
-              rating: 5,
-              comment: 'Dostoyevski\'nin bu muhteşem eseri, insan psikolojisini çok derinlemesine işliyor. Kesinlikle okunması gereken bir klasik.',
-              date: '2024-01-15'
-            },
-            {
-              id: 2,
-              userName: 'Ayşe M.',
-              rating: 4,
-              comment: 'Ağır bir roman ama o kadar değerli ki. Raskolnikov karakteri unutulmaz.',
-              date: '2024-01-10'
-            }
-          ]
-        },
-        {
-          id: 2,
-          title: 'Küçük Prens',
-          author: 'Antoine de Saint-Exupéry',
-          year: 1943,
-          genre: 'Fantastik',
-          description: 'Bir pilotun çölde tanıştığı küçük prensin hikayesini anlatan, çocuklar için yazılmış ancak tüm yaşlara hitap eden felsefi bir masal.',
-          coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11456461/wh:true/wi:220',
-          available: true,
-          rating: 4.6,
-          comments: [
-            {
-              id: 1,
-              userName: 'Zeynep T.',
-              rating: 5,
-              comment: 'Çocukken okumuştum, yetişkin olarak tekrar okuduğumda çok daha derin anlamlar keşfettim.',
-              date: '2024-01-12'
-            }
-          ]
-        }
-      ]
+      books: [],
+      userId: jwtDecode(this.$store.state.token).Id
     }
 },
 computed: {
@@ -336,7 +289,8 @@ computed: {
       
       const query = this.searchQuery.toLowerCase();
       return this.books.filter(book => 
-        book.title.toLowerCase().includes(query)
+        book.name.toLowerCase().includes(query) ||
+        book.authorName.toLowerCase().includes(query)
       );
     },
     totalPages() {
@@ -378,7 +332,25 @@ methods: {
       // Arama yapıldığında sayfa 1'e dön
       this.currentPage = 1;
     },
-    selectBook(book) {
+    async selectBook(book) {
+      try {
+        let response = await axios.get(`http://35.158.197.224/api/review/get-average-rating-by-book-id?bookId=${book.id}`);
+        book.rating = response.data.data;
+      } catch (error) {
+        book.rating = 0;
+        console.warn("No rating found for this book");
+      }
+
+      try {
+        let response = await axios.get(`http://35.158.197.224/api/review/get-reviews-by-book-id?bookId=${book.id}`);
+        book.comments = response.data.data;
+      } catch (error) {
+        book.comments = [];
+        console.warn("No reviews found for this book");
+      }
+      console.log(book.comments);
+      console.log(jwtDecode(this.$store.state.token).Id)      
+
       this.selectedBook = book;
       this.hoverRating = 0;
       this.tempRating = 0;
@@ -427,37 +399,58 @@ methods: {
       };
       return new Date(date).toLocaleDateString('tr-TR', options);
     },
-    submitComment() {
+    async submitComment() {
+      if(!this.$store.state.token){
+        alert("Yorum yapmak için giriş yapmanız gerekiyor");
+        this.$router.push('/giris-yap');
+        return;
+      }
+
+      console.log(jwtDecode(this.$store.state.token));
+
       if (!this.canSubmitComment) return;
       
       // Yeni yorum objesi oluştur
       const newComment = {
-        id: Date.now(), // Basit ID oluşturma
-        userName: this.newComment.userName.trim(),
+        // userName: this.newComment.userName.trim(),
         rating: this.newComment.rating,
         comment: this.newComment.text.trim(),
-        date: new Date().toISOString().split('T')[0] // Bugünün tarihi (YYYY-MM-DD)
+        appuUserId: jwtDecode(this.$store.state.token).id,
+        bookId: this.selectedBook.id
+        // date: new Date().toISOString().split('T')[0] // Bugünün tarihi (YYYY-MM-DD)
       };
       
-      // Yorumu kitabın comments dizisine ekle
+      // // Yorumu kitabın comments dizisine ekle
       this.selectedBook.comments.push(newComment);
-      
-      // Form'u temizle
-      this.resetCommentForm();
-      
-      // Başarı göstergesi göster ve 3 saniye sonra gizle
-      this.commentSubmitted = true;
-      setTimeout(() => {
-        this.commentSubmitted = false;
-      }, 3000);
-      
-      // İsteğe bağlı: küçük bir başarı mesajı
-      // alert('Yorumunuz başarıyla eklendi!');
+
+      let response = await axios.post('http://35.158.197.224/api/review/create-review', newComment);
+      if(response.data.success){
+        // Form'u temizle
+        this.resetCommentForm();
+        
+        // Başarı göstergesi göster ve 3 saniye sonra gizle
+        this.commentSubmitted = true;
+        setTimeout(() => {
+          this.commentSubmitted = false;
+        }, 3000);
+        
+        // İsteğe bağlı: küçük bir başarı mesajı
+        alert('Yorumunuz başarıyla eklendi!');
+        this.selectBook(this.selectedBook);
+      }
+      else{
+        alert("Bir hata oluştu...");
+        this.$router.go(0);
+      }
     },
     async getBooks(){
         let response = await axios.get("http://35.158.197.224/api/book/booklist");
         console.log(response.data.data);
-        this.books = response.data.data;
+        this.books = response.data.data.map(book => ({
+          ...book,
+          description: "abcdefgh",
+          genre: "Roman"
+        }));
         console.log(this.books);
     }
   },
@@ -1182,6 +1175,24 @@ methods: {
   cursor: not-allowed;
   opacity: 0.7;
   transform: none;
+}
+
+.comment-delete-btn{
+  color: white;
+  background-color: red;
+  font-weight: 500;
+  font-size: 16px;
+  border: 0;
+  outline: 0;
+  padding: 2px 24px;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+.comment-delete-btn:hover{
+  color: red;
+  background-color: white;
+  outline: 1px solid red;
 }
 
 /* Responsive Comments */
