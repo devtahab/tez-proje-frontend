@@ -65,9 +65,18 @@
 </template>
 
 <script>
-export default {
-  name: "Footer",
-};
+  export default {
+    data(){
+      return{
+
+      }
+    },
+    computed: {
+      colorBlind() {
+        return this.$store.state.colorBlindness;
+      }
+    },
+  };
 </script>
 
 <style scoped>

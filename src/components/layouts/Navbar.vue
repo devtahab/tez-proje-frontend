@@ -17,14 +17,14 @@
       </div>
 
       <!-- Kullanıcı giriş yaptıysa -->
-      <div v-else class="dropdown">
-        <button class="dropdown-toggle" @click="toggleDropdown">
+      <div v-if="isLoggedIn" class="dropdown">
+        <button type="button" class="dropdown-toggle" @click="toggleDropdown">
           Kullanıcı
         </button>
-        <ul v-if="showDropdown" class="dropdown-menu">
-          <li><a href="#">Profil</a></li>
-          <li><a href="#">Ayarlar</a></li>
-          <li><a href="#" @click="logout">Çıkış</a></li>
+        <ul v-show="showDropdown" class="dropdown-menu">
+          <li><a href="#">🧪 Test 1</a></li>
+          <li><a href="#">⚙️ Test 2</a></li>
+          <li><a href="#" @click="logout">🚪 Logout</a></li>
         </ul>
       </div>
 
@@ -41,41 +41,36 @@ export default {
   data() {
     return {
       showDropdown: false,
-      isLoggedIn: false, // Bu değer gerçek uygulamada bir auth store'dan gelecek
-      lightsOn: true,
-      colorBlind: false
     };
+  },
+  computed: {
+    lightsOn() {
+      return this.$store.state.lightsOn;
+    },
+    colorBlind() {
+      return this.$store.state.colorBlindness;
+    },
+    isLoggedIn() {
+      return !!this.$store.state.token;
+    }
   },
   methods: {
     toggleDropdown() {
       this.showDropdown = !this.showDropdown;
     },
-    toggle_lights(){
-      if(this.lightsOn){
-        this.lightsOn = false;
-        alert("Işıklar kapandı!");
-      }
-      else{
-        this.lightsOn = true;
-        alert("Işıklar açıldı!");
-      }
+    toggle_lights() {
+      this.$store.commit('toggleLights');
+      alert(this.lightsOn ? "Işıklar açıldı!" : "Işıklar kapandı!");
     },
-    toggle_colors(){
-      if(!this.colorBlind){
-        this.colorBlind = true;
-        alert("Renk körüsünüz!");
-      }
-      else{
-        this.colorBlind = false;
-        alert("Renk körü değilsiniz!");
-      }
+    toggle_colors() {
+      this.$store.commit('toggleColorBlindness');
+      alert(this.colorBlind ? "Renk körüsünüz!" : "Renk körü değilsiniz!");
     },
     logout() {
-      // Burada logout işlemi yapılacak
-      this.isLoggedIn = false;
+      this.$store.commit('clearToken');
       this.$router.push('/');
     }
-  },
+  }
 };
 </script>
 
@@ -135,20 +130,20 @@ export default {
 }
 
 .dropdown-menu {
-  position: absolute;
-  right: 0;
-  top: 100%;
   background-color: white;
-  color: black;
-  list-style: none;
-  padding: 0.5rem;
-  margin: 0;
-  border-radius: 4px;
-  z-index: 10;
+  padding: 1rem;
+  display: block;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 9999;
 }
 
+
 .dropdown-menu li {
-  margin: 0.25rem 0;
+  padding: 0.5rem 1rem;
+  color: black;
+  font-weight: bold;
 }
 
 .dropdown-menu a {
