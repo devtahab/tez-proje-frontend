@@ -8,7 +8,7 @@
           type="text" 
           v-model="searchQuery" 
           class="search-input" 
-          placeholder="Kitap adı veya yazar ara..."
+          placeholder="Kitap adı, yazar veya konu ara..."
           @input="searchBooks"
         />
         <button class="search-button" @click="searchBooks">
@@ -278,7 +278,7 @@ data() {
       newCommentHover: 0,
       commentSubmitted: false, // Yorum gönderildi göstergesi
       books: [],
-      userId: jwtDecode(this.$store.state.token).Id
+      userId: null
     }
 },
 computed: {
@@ -290,7 +290,8 @@ computed: {
       const query = this.searchQuery.toLowerCase();
       return this.books.filter(book => 
         book.name.toLowerCase().includes(query) ||
-        book.authorName.toLowerCase().includes(query)
+        book.authorName.toLowerCase().includes(query) ||
+        book.genre.toLowerCase().includes(query)
       );
     },
     totalPages() {
@@ -349,7 +350,7 @@ methods: {
         console.warn("No reviews found for this book");
       }
       console.log(book.comments);
-      console.log(jwtDecode(this.$store.state.token).Id)      
+      console.log(this.userId);      
 
       this.selectedBook = book;
       this.hoverRating = 0;
@@ -446,17 +447,25 @@ methods: {
     async getBooks(){
         let response = await axios.get("http://35.158.197.224/api/book/booklist");
         console.log(response.data.data);
-        this.books = response.data.data.map(book => ({
-          ...book,
-          description: "abcdefgh",
-          genre: "Roman"
-        }));
+        this.books = response.data.data;
         console.log(this.books);
     }
   },
   mounted(){
     this.getBooks();
-  }
+
+    let token = this.$store.state.token;
+    if (typeof token === 'string' && token.trim() !== '') {
+        try {
+          const decoded = jwtDecode(token);
+          this.userId = decoded.Id || null; // küçük harf "id"
+        } catch (e) {
+          console.error('Token decode error:', e);
+        }
+      } else {
+        console.warn('No valid token found.');
+      }
+    }
 }
 </script>
 
