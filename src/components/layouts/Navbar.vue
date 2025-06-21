@@ -17,14 +17,26 @@
       </div>
 
       <!-- Kullanıcı giriş yaptıysa -->
-      <div v-if="isLoggedIn" class="dropdown">
+      <div v-if="isLoggedIn && !isAdmin" class="dropdown">
         <button type="button" class="dropdown-toggle" @click="toggleDropdown">
-          Kullanıcı
+          {{ username }}
         </button>
         <ul v-show="showDropdown" class="dropdown-menu">
-          <li><a href="#">🧪 Test 1</a></li>
-          <li><a href="#">⚙️ Test 2</a></li>
-          <li><a href="#" @click="logout">🚪 Logout</a></li>
+          <li><a href="/odunc-kitaplar">Ödünç Kitaplarım</a></li>
+          <li><a href="#">Rezervasyonlarım</a></li>
+          <li><a href="#" @click="logout">Çıkış Yap</a></li>
+        </ul>
+      </div>
+
+      <div v-if="isLoggedIn && isAdmin" class="dropdown">
+        <button type="button" class="dropdown-toggle" @click="toggleDropdown">
+          {{ username }}
+        </button>
+        <ul v-show="showDropdown" class="dropdown-menu">
+          <li><a href="/aktif-odunc-alinan-kitaplar">Ödünç Alınan Kitaplar</a></li>
+          <li><a href="#">Aktif Rezervasyonlar</a></li>
+          <li><a href="#">Geçmiş Rezervasyonlar</a></li>
+          <li><a href="#" @click="logout">Çıkış Yap</a></li>
         </ul>
       </div>
 
@@ -52,6 +64,16 @@ export default {
     },
     isLoggedIn() {
       return !!this.$store.state.token;
+    },
+    username(){
+      return this.$store.state.username;
+    },
+    isAdmin(){
+      if(this.$store.state.userRole === "admin"){
+        return true;
+      }
+
+      return false;
     }
   },
   methods: {

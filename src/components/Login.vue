@@ -124,6 +124,13 @@ export default {
         this.$store.commit('saveToken', token);
         console.log(jwtDecode(token));
 
+        let responseTwo = await axios.get("http://35.158.197.224/api/auth/get-user-list");
+        let user = responseTwo.data.data.find(u => u.id === jwtDecode(token).Id);
+        console.log(user);
+        this.$store.commit('saveUsername', `${user.name} ${user.surname}`);
+        let userRole = user.isAdmin ? "admin" : "user";
+        this.$store.commit('saveUserRole', userRole);
+
         this.failMessage = '';
         this.successMessage = 'Hoşgeldiniz!'
 

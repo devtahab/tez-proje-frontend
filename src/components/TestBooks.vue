@@ -223,10 +223,10 @@
                   <div class="comment-header">
                     <div class="comment-user">
                       <div class="user-avatar">
-                        {{ comment.userName ? comment.userName.charAt(0) : "U" }}
+                        {{ comment.fullName ? comment.fullName.charAt(0) : "U" }}
                       </div>
                       <div class="user-info">
-                        <span class="user-name">{{ comment.userName ? comment.userName : "Username" }}</span>
+                        <span class="user-name">{{ comment.fullName ? comment.fullName : "Username" }}</span>
                         <span class="comment-date">{{ comment.date ? formatDate(comment.date) : "2025" }}</span>
                       </div>
                     </div>
@@ -374,13 +374,29 @@ methods: {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     },
-    borrowBook(book) {
-      // Burada kitap ödünç alma işlemleri yapılabilir
-      // Şimdilik basit bir alert gösterelim
-      if (book.available) {
-        alert(`"${book.title}" kitabını ödünç aldınız.`);
-        // Gerçek uygulamada burada API isteği yapılabilir
-        // book.available = false; // Kitabın durumunu güncelleyebiliriz
+    async borrowBook(book) {
+      if(!this.$store.state.token){
+        alert("Yorum yapmak için giriş yapmanız gerekiyor");
+        this.$router.push('/giris-yap');
+        return;
+      }
+      
+      if (!book.isAvailable) {
+        return;
+      }
+
+      let response = await axios.post('http://35.158.197.224/api/borrowing/createborrowing', {
+        appUserId: this.userId,
+        bookId: book.id
+      });
+
+      if(response.data.success){
+        alert('Kitabı başarıyla ödünç aldınız!');
+        this.selectBook(this.selectedBook);
+      }
+      else{
+        alert("Bir hata oluştu...");
+        this.$router.go(0);
       }
     },
     resetCommentForm() {
@@ -416,7 +432,7 @@ methods: {
         // userName: this.newComment.userName.trim(),
         rating: this.newComment.rating,
         comment: this.newComment.text.trim(),
-        appuUserId: jwtDecode(this.$store.state.token).id,
+        appuUserId: jwtDecode(this.$store.state.token).Id,
         bookId: this.selectedBook.id
         // date: new Date().toISOString().split('T')[0] // Bugünün tarihi (YYYY-MM-DD)
       };

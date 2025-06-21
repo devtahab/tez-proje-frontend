@@ -23,6 +23,15 @@
                     <input type="number" class="form-control" id="product_case_shape" v-model="book.publishedYear">
                 </div>
                 <div class="col-md-6">
+                    <label for="product_color" class="form-label">Genre</label>
+                    <input type="text" class="form-control" id="product_color" v-model="book.genre">
+                </div>
+                <div class="col-md-6">
+                    <label for="product_cord" class="form-label">Description</label>
+                    <input type="text" class="form-control" id="product_cord" v-model="book.description">
+                </div>
+
+                <div class="col-md-6">
                     <label for="product_cord_color" class="form-label">Author Name</label>
                     <input type="text" class="form-control" id="product_cord_color" v-model="book.authorName">
                 </div>
@@ -57,6 +66,8 @@
                     publishedYear: 1234,
                     authorName: 'ben',
                     imageUrl: null,
+                    genre: 'Roman',
+                    description: ''
                 }
             };
         },

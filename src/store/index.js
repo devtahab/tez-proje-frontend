@@ -4,7 +4,9 @@ let store = createStore({
     state: {
         token: localStorage.getItem('token') || null,
         colorBlindness: JSON.parse(localStorage.getItem('clb') || "false"),
-        lightsOn: JSON.parse(localStorage.getItem('lights') || "false")
+        lightsOn: JSON.parse(localStorage.getItem('lights') || "false"),
+        username: localStorage.getItem('username') || "",
+        userRole: localStorage.getItem('userRole') || "user"
     },
     mutations: {
         saveToken(state, token){
@@ -22,6 +24,14 @@ let store = createStore({
         toggleLights(state){
             state.lightsOn = !state.lightsOn;
             localStorage.setItem('lights', state.lightsOn);
+        },
+        saveUsername(state, username){
+            state.username = username;
+            localStorage.setItem('username', username);
+        },
+        saveUserRole(state, userRole){
+            state.userRole = userRole;
+            localStorage.setItem('userRole', userRole);
         }
     }
 })

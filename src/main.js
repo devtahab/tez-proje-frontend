@@ -19,6 +19,8 @@ import Reservation from './components/Reservation.vue';
 import TestReservation from './components/TestReservation.vue'; // Api responselarını test edip görmek için koydum
 import TestBooks from './components/TestBooks.vue'
 import CreateBook from './components/CreateBook.vue'
+import UserBorrowings from './components/user-panel/Borrowings.vue'
+import AdminBorrowings from './components/admin-panel/Borrowings.vue'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,7 +34,9 @@ const router = createRouter({
         { path: '/kayit-ol', component: SignUp },
         { path: '/test-res', component: TestReservation },
         { path: '/test-book', component: TestBooks },
-        { path: '/create-book', component: CreateBook }
+        { path: '/create-book', component: CreateBook },
+        { path: '/odunc-kitaplar', component: UserBorrowings},
+        { path: '/aktif-odunc-alinan-kitaplar', component: AdminBorrowings}
     ]
 })
 
