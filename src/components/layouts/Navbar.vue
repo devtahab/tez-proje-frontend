@@ -87,7 +87,7 @@ export default {
     },
     toggle_colors() {
       this.$store.commit('toggleColorBlindness');
-      alert(this.colorBlind ? "Renk körüsünüz!" : "Renk körü değilsiniz!");
+      alert(this.colorBlind ? "Renk körü modu açık!" : "Renk körü modu kapalı!");
     },
     logout() {
       this.$store.commit('clearToken');
