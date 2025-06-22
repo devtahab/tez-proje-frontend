@@ -26,11 +26,11 @@
           @click="selectBook(book)"
         >
           <div class="book-cover">
-            <img :src="book.coverImage" :alt="book.title">
+            <img :src="book.imageUrl" :alt="book.name">
           </div>
           <div class="book-info">
-            <h3 class="book-title">{{ book.title }}</h3>
-            <p class="book-author">{{ book.author }}</p>
+            <h3 class="book-title">{{ book.name }}</h3>
+            <p class="book-author">{{ book.authorName }}</p>
           </div>
         </div>
       </div>
@@ -97,31 +97,25 @@
           <div v-if="activeTab === 'info'" class="tab-content">
             <div class="modal-book-details">
               <div class="modal-book-cover">
-                <img :src="selectedBook.coverImage" :alt="selectedBook.title">
+                <img :src="selectedBook.imageUrl" :alt="selectedBook.title">
               </div>
               <div class="modal-book-info">
                 <h2>{{ selectedBook.title }}</h2>
-                <p class="modal-book-author">Yazar: {{ selectedBook.author }}</p>
-                <p class="modal-book-year">Yayın Yılı: {{ selectedBook.year }}</p>
+                <p class="modal-book-author">Yazar: {{ selectedBook.authorName }}</p>
+                <p class="modal-book-year">Yayın Yılı: {{ selectedBook.publishedYear }}</p>
                 <p class="modal-book-genre">Tür: {{ selectedBook.genre }}</p>
                 
                 <!-- Rating Section -->
                 <div class="rating-section">
                   <div class="current-rating">
-                    <span class="rating-label">Puan Ver:</span>
                     <div class="stars-display">
                       <svg 
                         v-for="star in 5" 
                         :key="`display-${star}`"
-                        class="star interactive"
+                        class="star"
                         :class="{ 
-                          'filled': star <= selectedBook.rating,
-                          'hover': star <= hoverRating && hoverRating > 0,
-                          'selected': star <= tempRating && tempRating > 0
+                          'filled': star <= selectedBook.rating
                         }"
-                        @mouseover="hoverRating = star"
-                        @mouseleave="hoverRating = 0"
-                        @click="rateBook(selectedBook, star)"
                         xmlns="http://www.w3.org/2000/svg" 
                         viewBox="0 0 24 24"
                       >
@@ -129,21 +123,20 @@
                       </svg>
                       <span class="rating-text">({{ selectedBook.rating }}/5)</span>
                     </div>
-                    <p class="rating-hint">Puan vermek için yıldızlara tıklayın</p>
                   </div>
                 </div>
                 
                 <p class="modal-book-description">{{ selectedBook.description }}</p>
                 <div class="modal-book-status">
-                  <span :class="['status-indicator', selectedBook.available ? 'available' : 'not-available']"></span>
-                  {{ selectedBook.available ? 'Mevcut' : 'Ödünç Verilmiş' }}
+                  <span :class="['status-indicator', selectedBook.isAvailable ? 'available' : 'not-available']"></span>
+                  {{ selectedBook.isAvailable ? 'Mevcut' : 'Ödünç Verilmiş' }}
                 </div>
                 
                 <div class="modal-actions">
                   <button 
                     class="borrow-button" 
-                    :class="{ 'disabled': !selectedBook.available }"
-                    :disabled="!selectedBook.available"
+                    :class="{ 'disabled': !selectedBook.isAvailable }"
+                    :disabled="!selectedBook.isAvailable"
                     @click="borrowBook(selectedBook)"
                   >
                     Ödünç Al
@@ -225,11 +218,11 @@
                   <div class="comment-header">
                     <div class="comment-user">
                       <div class="user-avatar">
-                        {{ comment.userName.charAt(0) }}
+                        {{ comment.fullName ? comment.fullName.charAt(0) : "U" }}
                       </div>
                       <div class="user-info">
-                        <span class="user-name">{{ comment.userName }}</span>
-                        <span class="comment-date">{{ formatDate(comment.date) }}</span>
+                        <span class="user-name">{{ comment.fullName ? comment.fullName : "Username" }}</span>
+                        <span class="comment-date">{{ comment.date ? formatDate(comment.date) : "2025" }}</span>
                       </div>
                     </div>
                     <div class="comment-rating">
@@ -246,6 +239,7 @@
                     </div>
                   </div>
                   <p class="comment-text">{{ comment.comment }}</p>
+                  <button v-if="comment.appuUserId === userId" class="comment-delete-btn">Sil <i class="bi bi-trash"></i></button>
                 </div>
               </div>
               
@@ -258,8 +252,11 @@
 </template>
 
 <script>
+import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
+
 export default {
-  data() {
+data() {
     return {
       searchQuery: '',
       selectedBook: null,
@@ -275,273 +272,11 @@ export default {
       },
       newCommentHover: 0,
       commentSubmitted: false, // Yorum gönderildi göstergesi
-      books: [
-        {
-          id: 1,
-          title: 'Suç ve Ceza',
-          author: 'Fyodor Dostoyevski',
-          year: 1866,
-          genre: 'Roman',
-          description: 'Raskolnikov adlı fakir bir gencin işlediği cinayet sonrasında yaşadığı psikolojik çöküntüyü anlatan dünya klasiklerinden bir eser.',
-          coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11439747/wh:true/wi:220',
-          available: true,
-          rating: 4.8,
-          comments: [
-            {
-              id: 1,
-              userName: 'Mehmet K.',
-              rating: 5,
-              comment: 'Dostoyevski\'nin bu muhteşem eseri, insan psikolojisini çok derinlemesine işliyor. Kesinlikle okunması gereken bir klasik.',
-              date: '2024-01-15'
-            },
-            {
-              id: 2,
-              userName: 'Ayşe M.',
-              rating: 4,
-              comment: 'Ağır bir roman ama o kadar değerli ki. Raskolnikov karakteri unutulmaz.',
-              date: '2024-01-10'
-            }
-          ]
-        },
-        {
-          id: 2,
-          title: 'Küçük Prens',
-          author: 'Antoine de Saint-Exupéry',
-          year: 1943,
-          genre: 'Fantastik',
-          description: 'Bir pilotun çölde tanıştığı küçük prensin hikayesini anlatan, çocuklar için yazılmış ancak tüm yaşlara hitap eden felsefi bir masal.',
-          coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11456461/wh:true/wi:220',
-          available: true,
-          rating: 4.6,
-          comments: [
-            {
-              id: 1,
-              userName: 'Zeynep T.',
-              rating: 5,
-              comment: 'Çocukken okumuştum, yetişkin olarak tekrar okuduğumda çok daha derin anlamlar keşfettim.',
-              date: '2024-01-12'
-            }
-          ]
-        },
-        {
-          id: 3,
-          title: '1984',
-          author: 'George Orwell',
-          year: 1949,
-          genre: 'Distopya',
-          description: 'Büyük Birader\'in gözetimindeki totaliter bir dünyada yaşayan Winston Smith\'in hikayesini anlatan, distopik kurgu klasiklerinden.',
-          coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11453559/wh:true/wi:220',
-          available: false,
-          rating: 4.7,
-          comments: []
-        },
-        {
-          id: 4,
-          title: 'Simyacı',
-          author: 'Paulo Coelho',
-          year: 1988,
-          genre: 'Roman',
-          description: 'Santiago adlı çobanın kişisel efsanesini gerçekleştirmek için çıktığı yolculuğu anlatan, spiritüel temalar içeren bir başyapıt.',
-          coverImage: 'https://i.dr.com.tr/cache/600x600-0/originals/0000000064552-1.jpg',
-          available: true,
-          rating: 4.2,
-          comments: [
-            {
-              id: 1,
-              userName: 'Ali R.',
-              rating: 4,
-              comment: 'Kişisel gelişim açısından faydalı bir kitap. Santiago\'nun yolculuğu ilham verici.',
-              date: '2024-01-08'
-            }
-          ]
-        },
-        {
-          id: 5,
-          title: 'Sefiller',
-          author: 'Victor Hugo',
-          year: 1862,
-          genre: 'Roman',
-          description: 'Jean Valjean\'ın adaletsizlik, kefaret ve kurtuluş arayışı hikayesini anlatan, Fransız edebiyatının en önemli eserlerinden biri.',
-          coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11580789/wh:true/wi:220',
-          available: true,
-          rating: 4.5,
-          comments: []
-        },
-        {
-          id: 6,
-          title: 'Şeker Portakalı',
-          author: 'José Mauro de Vasconcelos',
-          year: 1968,
-          genre: 'Roman',
-          description: 'Brezilya\'nın yoksul kesiminde büyüyen Zezé adlı küçük bir çocuğun hayata tutunma çabasını anlatan dokunaklı bir hikaye.',
-          coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11454466/wh:true/wi:220',
-          available: false,
-          rating: 4.3,
-          comments: []
-        },
-        {
-          id: 7,
-          title: 'Yüzüklerin Efendisi',
-          author: 'J.R.R. Tolkien',
-          year: 1954,
-          genre: 'Fantastik',
-          description: 'Yüzük taşıyıcısı Frodo Baggins\'in Tek Yüzük\'ü yok etmek için çıktığı tehlikeli yolculuğu anlatan epik fantastik kurgu serisi.',
-          coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11675124/wh:true/wi:220',
-          available: true,
-          rating: 4.9,
-          comments: [
-            {
-              id: 1,
-              userName: 'Cem Y.',
-              rating: 5,
-              comment: 'Fantastik edebiyatın başyapıtı! Tolkien\'in hayal dünyası mükemmel.',
-              date: '2024-01-05'
-            },
-            {
-              id: 2,
-              userName: 'Elif K.',
-              rating: 5,
-              comment: 'Her okuduğumda yeni detaylar keşfediyorum. Muhteşem bir eser.',
-              date: '2024-01-03'
-            }
-          ]
-        },
-        {
-          id: 8,
-          title: 'Beyaz Diş',
-          author: 'Jack London',
-          year: 1906,
-          genre: 'Macera',
-          description: 'Yukon\'da yaşayan kurt köpeği White Fang\'in vahşi doğadan evcilleştirilmeye giden yolculuğunu anlatan klasik bir macera romanı.',
-          coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:1249760/wh:true/wi:220',
-          available: true,
-          rating: 4.1,
-          comments: []
-        },
-        {
-          id: 9,
-          title: 'Dönüşüm',
-          author: 'Franz Kafka',
-          year: 1915,
-          genre: 'Absürt',
-          description: 'Gregor Samsa\'nın bir sabah uyandığında kendini dev bir böceğe dönüşmüş olarak bulmasıyla başlayan absürt ve alegorik hikaye.',
-          coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11457886/wh:true/wi:220',
-          available: false,
-          rating: 4.4,
-          comments: []
-        },
-        {
-          id: 10,
-          title: 'Satranç',
-          author: 'Stefan Zweig',
-          year: 1942,
-          genre: 'Novella',
-          description: 'Bir transatlantik gemisinde satranç ustası Mirko Czentovic ile diğer yolcular arasındaki psikolojik satranç mücadelesini konu alan novella.',
-          coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11494042/wh:true/wi:220',
-          available: true,
-          rating: 4.0,
-          comments: []
-        },
-        {
-          id: 11,
-          title: 'Uçurtma Avcısı',
-          author: 'Khaled Hosseini',
-          year: 2003,
-          genre: 'Roman',
-          description: 'Afganistan\'dan Amerika\'ya uzanan ve dostluk, ihanet, pişmanlık ve kurtuluş temalarını işleyen etkileyici bir hikaye.',
-          coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11456053/wh:true/wi:220',
-          available: true,
-          rating: 4.6,
-          comments: []
-        },
-        {
-          id: 12,
-          title: 'Hayvan Çiftliği',
-          author: 'George Orwell',
-          year: 1945,
-          genre: 'Alegorik',
-          description: 'Bir çiftlikte hayvanların insanlara karşı ayaklanmasını ve sonrasında gelişen olayları anlatan, Sovyet rejimini eleştiren alegorik bir roman.',
-          coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11429373/wh:true/wi:220',
-          available: false,
-          rating: 4.3,
-          comments: []
-        },
-        {
-          id: 13,
-          title: 'Bülbülü Öldürmek',
-          author: 'Harper Lee',
-          year: 1960,
-          genre: 'Roman',
-          description: 'Amerikan Güneyi\'nde ırkçılık ve adaletsizliğe karşı mücadele eden bir avukat ve onun çocuklarının hikayesini anlatan Pulitzer ödüllü roman.',
-          coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11450211/wh:true/wi:220',
-          available: true,
-          rating: 4.5,
-          comments: []
-        },
-        {
-          id: 14,
-          title: 'Yabancı',
-          author: 'Albert Camus',
-          year: 1942,
-          genre: 'Absürdizm',
-          description: 'Toplumsal normlara kayıtsız kalan ve bir Arap\'ı öldürdükten sonra yargılanan Meursault\'un hikayesini anlatan varoluşçu roman.',
-          coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11463051/wh:true/wi:220',
-          available: true,
-          rating: 4.2,
-          comments: []
-        },
-        {
-          id: 15,
-          title: 'Bin Muhteşem Güneş',
-          author: 'Khaled Hosseini',
-          year: 2007,
-          genre: 'Roman',
-          description: 'Afganistan\'da farklı kuşaklardan iki kadının hayatlarının kesişmesini ve dostluklarını anlatan duygusal bir roman.',
-          coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11456093/wh:true/wi:220',
-          available: false,
-          rating: 4.4,
-          comments: []
-        },
-        {
-          id: 16,
-          title: 'Fareler ve İnsanlar',
-          author: 'John Steinbeck',
-          year: 1937,
-          genre: 'Roman',
-          description: 'Büyük Buhran döneminde Kaliforniya\'da çalışan iki gezgin tarım işçisinin dostluğunu ve hayallerini anlatan bir klasik.',
-          coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11452999/wh:true/wi:220',
-          available: true,
-          rating: 4.1,
-          comments: []
-        },
-        {
-          id: 17,
-          title: 'Martı Jonathan Livingston',
-          author: 'Richard Bach',
-          year: 1970,
-          genre: 'Felsefi',
-          description: 'Sürüsünün geleneklerini reddederek uçmanın sınırlarını zorlamaya çalışan bir martının kendini gerçekleştirme yolculuğu.',
-          coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:6559238/wh:true/wi:220',
-          available: true,
-          rating: 3.9,
-          comments: []
-        },
-        {
-          id: 18,
-          title: 'Dokuzuncu Hariciye Koğuşu',
-          author: 'Peyami Safa',
-          year: 1930,
-          genre: 'Roman',
-          description: 'Bacağındaki kemik hastalığı yüzünden hastane hastane dolaşan bir gencin acılarını, aşkını ve hayata tutunma çabasını anlatan otobiyografik roman.',
-          coverImage: 'https://img.kitapyurdu.com/v1/getImage/fn:11568693/wh:true/wi:220',
-          available: false,
-          rating: 4.0,
-          comments: []
-        }
-      ]
+      books: [],
+      userId: null
     }
-  },
-  computed: {
+},
+computed: {
     filteredBooks() {
       if (!this.searchQuery) {
         return this.books;
@@ -549,8 +284,8 @@ export default {
       
       const query = this.searchQuery.toLowerCase();
       return this.books.filter(book => 
-        book.title.toLowerCase().includes(query) || 
-        book.author.toLowerCase().includes(query) ||
+        book.name.toLowerCase().includes(query) ||
+        book.authorName.toLowerCase().includes(query) ||
         book.genre.toLowerCase().includes(query)
       );
     },
@@ -587,13 +322,31 @@ export default {
              this.newComment.rating > 0 && 
              this.newComment.text.trim() !== '';
     }
-  },
-  methods: {
+},
+methods: {
     searchBooks() {
       // Arama yapıldığında sayfa 1'e dön
       this.currentPage = 1;
     },
-    selectBook(book) {
+    async selectBook(book) {
+      try {
+        let response = await axios.get(`http://35.158.197.224/api/review/get-average-rating-by-book-id?bookId=${book.id}`);
+        book.rating = response.data.data;
+      } catch (error) {
+        book.rating = 0;
+        console.warn("No rating found for this book");
+      }
+
+      try {
+        let response = await axios.get(`http://35.158.197.224/api/review/get-reviews-by-book-id?bookId=${book.id}`);
+        book.comments = response.data.data;
+      } catch (error) {
+        book.comments = [];
+        console.warn("No reviews found for this book");
+      }
+      console.log(book.comments);
+      console.log(this.userId);      
+
       this.selectedBook = book;
       this.hoverRating = 0;
       this.tempRating = 0;
@@ -616,21 +369,30 @@ export default {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     },
-    borrowBook(book) {
-      // Burada kitap ödünç alma işlemleri yapılabilir
-      // Şimdilik basit bir alert gösterelim
-      if (book.available) {
-        alert(`"${book.title}" kitabını ödünç aldınız.`);
-        // Gerçek uygulamada burada API isteği yapılabilir
-        // book.available = false; // Kitabın durumunu güncelleyebiliriz
+    async borrowBook(book) {
+      if(!this.$store.state.token){
+        alert("Yorum yapmak için giriş yapmanız gerekiyor");
+        this.$router.push('/giris-yap');
+        return;
       }
-    },
-    rateBook(book, rating) {
-      // Burada kitap puanı verme işlemleri yapılabilir
-      // Şimdilik basit bir alert gösterelim
-      alert(`"${book.title}" kitabına ${rating} yıldız verdiniz.`);
-      // Gerçek uygulamada burada API isteği yapılabilir
-      // book.rating = rating; // Kitabın puanını güncelleyebiliriz
+      
+      if (!book.isAvailable) {
+        return;
+      }
+
+      let response = await axios.post('http://35.158.197.224/api/borrowing/createborrowing', {
+        appUserId: this.userId,
+        bookId: book.id
+      });
+
+      if(response.data.success){
+        alert('Kitabı başarıyla ödünç aldınız!');
+        this.selectBook(this.selectedBook);
+      }
+      else{
+        alert("Bir hata oluştu...");
+        this.$router.go(0);
+      }
     },
     resetCommentForm() {
       this.newComment = {
@@ -649,34 +411,72 @@ export default {
       };
       return new Date(date).toLocaleDateString('tr-TR', options);
     },
-    submitComment() {
+    async submitComment() {
+      if(!this.$store.state.token){
+        alert("Yorum yapmak için giriş yapmanız gerekiyor");
+        this.$router.push('/giris-yap');
+        return;
+      }
+
+      console.log(jwtDecode(this.$store.state.token));
+
       if (!this.canSubmitComment) return;
       
       // Yeni yorum objesi oluştur
       const newComment = {
-        id: Date.now(), // Basit ID oluşturma
-        userName: this.newComment.userName.trim(),
+        // userName: this.newComment.userName.trim(),
         rating: this.newComment.rating,
         comment: this.newComment.text.trim(),
-        date: new Date().toISOString().split('T')[0] // Bugünün tarihi (YYYY-MM-DD)
+        appuUserId: jwtDecode(this.$store.state.token).Id,
+        bookId: this.selectedBook.id
+        // date: new Date().toISOString().split('T')[0] // Bugünün tarihi (YYYY-MM-DD)
       };
       
-      // Yorumu kitabın comments dizisine ekle
+      // // Yorumu kitabın comments dizisine ekle
       this.selectedBook.comments.push(newComment);
-      
-      // Form'u temizle
-      this.resetCommentForm();
-      
-      // Başarı göstergesi göster ve 3 saniye sonra gizle
-      this.commentSubmitted = true;
-      setTimeout(() => {
-        this.commentSubmitted = false;
-      }, 3000);
-      
-      // İsteğe bağlı: küçük bir başarı mesajı
-      // alert('Yorumunuz başarıyla eklendi!');
+
+      let response = await axios.post('http://35.158.197.224/api/review/create-review', newComment);
+      if(response.data.success){
+        // Form'u temizle
+        this.resetCommentForm();
+        
+        // Başarı göstergesi göster ve 3 saniye sonra gizle
+        this.commentSubmitted = true;
+        setTimeout(() => {
+          this.commentSubmitted = false;
+        }, 3000);
+        
+        // İsteğe bağlı: küçük bir başarı mesajı
+        alert('Yorumunuz başarıyla eklendi!');
+        this.selectBook(this.selectedBook);
+      }
+      else{
+        alert("Bir hata oluştu...");
+        this.$router.go(0);
+      }
+    },
+    async getBooks(){
+        let response = await axios.get("http://35.158.197.224/api/book/booklist");
+        console.log(response.data.data);
+        this.books = response.data.data;
+        console.log(this.books);
     }
-  }
+  },
+  mounted(){
+    this.getBooks();
+
+    let token = this.$store.state.token;
+    if (typeof token === 'string' && token.trim() !== '') {
+        try {
+          const decoded = jwtDecode(token);
+          this.userId = decoded.Id || null; // küçük harf "id"
+        } catch (e) {
+          console.error('Token decode error:', e);
+        }
+      } else {
+        console.warn('No valid token found.');
+      }
+    }
 }
 </script>
 
@@ -1395,6 +1195,24 @@ export default {
   cursor: not-allowed;
   opacity: 0.7;
   transform: none;
+}
+
+.comment-delete-btn{
+  color: white;
+  background-color: red;
+  font-weight: 500;
+  font-size: 16px;
+  border: 0;
+  outline: 0;
+  padding: 2px 24px;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+.comment-delete-btn:hover{
+  color: red;
+  background-color: white;
+  outline: 1px solid red;
 }
 
 /* Responsive Comments */

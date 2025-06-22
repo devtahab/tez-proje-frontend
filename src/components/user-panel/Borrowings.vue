@@ -37,6 +37,12 @@ export default {
     };
   },
   async created() {
+    if(!this.$store.state.token){
+        alert("Giriş yapmanız gerekiyor");
+        this.$router.push('/giris-yap');
+        return;
+      }
+
     try {
       let userId = jwtDecode(this.$store.state.token).Id;
 

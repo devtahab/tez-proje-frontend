@@ -74,6 +74,17 @@ export default {
     }
   },
   async created() {
+    if(!this.$store.state.token){
+      alert("Yorum yapmak için giriş yapmanız gerekiyor");
+      this.$router.push('/giris-yap');
+      return;
+    }
+
+    if(this.$store.state.userRole === "user"){
+      this.$router.push('/');
+      return;
+    }
+
     try {
       const response = await axios.get('http://35.158.197.224/api/auth/get-user-list');
       this.users = response.data.data;

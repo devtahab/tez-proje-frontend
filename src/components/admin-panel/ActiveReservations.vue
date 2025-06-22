@@ -35,6 +35,17 @@ export default {
     };
   },
   async created() {
+    if(!this.$store.state.token){
+      alert("Yorum yapmak için giriş yapmanız gerekiyor");
+      this.$router.push('/giris-yap');
+      return;
+    }
+
+    if(this.$store.state.userRole === "user"){
+      this.$router.push('/');
+      return;
+    }
+
     try {
       let userId = jwtDecode(this.$store.state.token).Id;
 

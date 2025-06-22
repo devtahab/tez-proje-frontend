@@ -68,6 +68,17 @@ export default {
     },
   },
   async created() {
+    if(!this.$store.state.token){
+      alert("Yorum yapmak için giriş yapmanız gerekiyor");
+      this.$router.push('/giris-yap');
+      return;
+    }
+
+    if(this.$store.state.userRole === "user"){
+      this.$router.push('/');
+      return;
+    }
+
     try {
       const res = await axios.get(`http://35.158.197.224/api/reservation/get-expired-reservations`);
       this.reservations = res.data.data;
