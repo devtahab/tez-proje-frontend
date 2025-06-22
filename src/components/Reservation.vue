@@ -8,8 +8,8 @@
         <!-- Sol En Üst Uzun Masa -->
         <div 
           class="rectangular-table left-table" 
-          :class="{ 'selected': selectedTable === 'masa-1' }"
-          @click="selectTable('masa-1', 'Masa 1')"
+          :class="{ 'selected': selectedTableName === 'Masa 1' }"
+          @click="selectTable('Masa 1', 0)"
         >
           <svg class="table-icon rectangular-icon" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
             <!-- Masa Üstü -->
@@ -37,8 +37,8 @@
         <!-- Sol Üst Uzun Masa -->
         <div 
           class="rectangular-table left-table" 
-          :class="{ 'selected': selectedTable === 'masa-2' }"
-          @click="selectTable('masa-2', 'Masa 2')"
+          :class="{ 'selected': selectedTableName === 'Masa 2' }"
+          @click="selectTable('Masa 2', 1)"
         >
           <svg class="table-icon rectangular-icon" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
             <rect x="5" y="20" width="90" height="25" rx="3" fill="#8B4513" stroke="#654321" stroke-width="1"/>
@@ -63,8 +63,8 @@
         <div class="round-tables-row">
           <div 
             class="round-table" 
-            :class="{ 'selected': selectedTable === 'masa-3' }"
-            @click="selectTable('masa-3', 'Masa 3')"
+            :class="{ 'selected': selectedTableName === 'Masa 9' }"
+            @click="selectTable('Masa 9', 8)"
           >
             <svg class="table-icon round-icon" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
               <!-- Masa Üstü -->
@@ -79,13 +79,14 @@
               <circle cx="40" cy="65" r="4" fill="#4A4A4A"/>
               <circle cx="15" cy="40" r="4" fill="#4A4A4A"/>
             </svg>
-            <div class="table-label">3</div>
+            <img src="/images/engelli-logo.png" class="accessibility-icon" alt="Engelli Masa" />
+            <div class="table-label">9</div>
           </div>
           
           <div 
             class="round-table" 
-            :class="{ 'selected': selectedTable === 'masa-4' }"
-            @click="selectTable('masa-4', 'Masa 4')"
+            :class="{ 'selected': selectedTableName === 'Masa 10' }"
+            @click="selectTable('Masa 10', 9)"
           >
             <svg class="table-icon round-icon" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
               <circle cx="40" cy="40" r="30" fill="#8B4513" stroke="#654321" stroke-width="2"/>
@@ -96,13 +97,14 @@
               <circle cx="40" cy="65" r="4" fill="#4A4A4A"/>
               <circle cx="15" cy="40" r="4" fill="#4A4A4A"/>
             </svg>
-            <div class="table-label">4</div>
+            <img src="/images/engelli-logo.png" class="accessibility-icon" alt="Engelli Masa" />
+            <div class="table-label">10</div>
           </div>
           
           <div 
             class="round-table" 
-            :class="{ 'selected': selectedTable === 'masa-5' }"
-            @click="selectTable('masa-5', 'Masa 5')"
+            :class="{ 'selected': selectedTableName === 'Masa 11' }"
+            @click="selectTable('Masa 11', 10)"
           >
             <svg class="table-icon round-icon" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
               <circle cx="40" cy="40" r="30" fill="#8B4513" stroke="#654321" stroke-width="2"/>
@@ -113,15 +115,16 @@
               <circle cx="40" cy="65" r="4" fill="#4A4A4A"/>
               <circle cx="15" cy="40" r="4" fill="#4A4A4A"/>
             </svg>
-            <div class="table-label">5</div>
+            <img src="/images/engelli-logo.png" class="accessibility-icon" alt="Engelli Masa" />
+            <div class="table-label">11</div>
           </div>
         </div>
 
         <!-- Sol Alt Uzun Masa -->
         <div 
           class="rectangular-table left-table" 
-          :class="{ 'selected': selectedTable === 'masa-6' }"
-          @click="selectTable('masa-6', 'Masa 6')"
+          :class="{ 'selected': selectedTableName === 'Masa 3' }"
+          @click="selectTable('Masa 3', 2)"
         >
           <svg class="table-icon rectangular-icon" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
             <rect x="5" y="20" width="90" height="25" rx="3" fill="#8B4513" stroke="#654321" stroke-width="1"/>
@@ -139,14 +142,14 @@
             <circle cx="65" cy="52" r="3" fill="#4A4A4A"/>
             <circle cx="80" cy="52" r="3" fill="#4A4A4A"/>
           </svg>
-          <div class="table-label">6</div>
+          <div class="table-label">3</div>
         </div>
 
         <!-- Sol En Alt Uzun Masa -->
         <div 
           class="rectangular-table left-table" 
-          :class="{ 'selected': selectedTable === 'masa-7' }"
-          @click="selectTable('masa-7', 'Masa 7')"
+          :class="{ 'selected': selectedTableName === 'Masa 4' }"
+          @click="selectTable('Masa 4', 3)"
         >
           <svg class="table-icon rectangular-icon" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
             <rect x="5" y="20" width="90" height="25" rx="3" fill="#8B4513" stroke="#654321" stroke-width="1"/>
@@ -164,7 +167,7 @@
             <circle cx="65" cy="52" r="3" fill="#4A4A4A"/>
             <circle cx="80" cy="52" r="3" fill="#4A4A4A"/>
           </svg>
-          <div class="table-label">7</div>
+          <div class="table-label">4</div>
         </div>
       </div>
 
@@ -302,8 +305,140 @@
         <!-- Sağ En Üst Uzun Masa -->
         <div 
           class="rectangular-table right-table" 
-          :class="{ 'selected': selectedTable === 'masa-8' }"
-          @click="selectTable('masa-8', 'Masa 8')"
+          :class="{ 'selected': selectedTableName === 'Masa 5' }"
+          @click="selectTable('Masa 5', 4)"
+        >
+          <svg class="table-icon rectangular-icon" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="20" width="90" height="25" rx="3" fill="#8B4513" stroke="#654321" stroke-width="1"/>
+            <rect x="7" y="22" width="90" height="25" rx="3" fill="#A0522D" opacity="0.7"/>
+            <rect x="10" y="45" width="4" height="12" fill="#654321"/>
+            <rect x="86" y="45" width="4" height="12" fill="#654321"/>
+            <circle cx="20" cy="12" r="3" fill="#4A4A4A"/>
+            <circle cx="35" cy="12" r="3" fill="#4A4A4A"/>
+            <circle cx="50" cy="12" r="3" fill="#4A4A4A"/>
+            <circle cx="65" cy="12" r="3" fill="#4A4A4A"/>
+            <circle cx="80" cy="12" r="3" fill="#4A4A4A"/>
+            <circle cx="20" cy="52" r="3" fill="#4A4A4A"/>
+            <circle cx="35" cy="52" r="3" fill="#4A4A4A"/>
+            <circle cx="50" cy="52" r="3" fill="#4A4A4A"/>
+            <circle cx="65" cy="52" r="3" fill="#4A4A4A"/>
+            <circle cx="80" cy="52" r="3" fill="#4A4A4A"/>
+          </svg>
+          <div class="table-label">5</div>
+        </div>
+
+        <!-- Sağ Üst Uzun Masa -->
+        <div 
+          class="rectangular-table right-table" 
+          :class="{ 'selected': selectedTableName === 'Masa 6' }"
+          @click="selectTable('Masa 6', 5)"
+        >
+          <svg class="table-icon rectangular-icon" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="20" width="90" height="25" rx="3" fill="#8B4513" stroke="#654321" stroke-width="1"/>
+            <rect x="7" y="22" width="90" height="25" rx="3" fill="#A0522D" opacity="0.7"/>
+            <rect x="10" y="45" width="4" height="12" fill="#654321"/>
+            <rect x="86" y="45" width="4" height="12" fill="#654321"/>
+            <circle cx="20" cy="12" r="3" fill="#4A4A4A"/>
+            <circle cx="35" cy="12" r="3" fill="#4A4A4A"/>
+            <circle cx="50" cy="12" r="3" fill="#4A4A4A"/>
+            <circle cx="65" cy="12" r="3" fill="#4A4A4A"/>
+            <circle cx="80" cy="12" r="3" fill="#4A4A4A"/>
+            <circle cx="20" cy="52" r="3" fill="#4A4A4A"/>
+            <circle cx="35" cy="52" r="3" fill="#4A4A4A"/>
+            <circle cx="50" cy="52" r="3" fill="#4A4A4A"/>
+            <circle cx="65" cy="52" r="3" fill="#4A4A4A"/>
+            <circle cx="80" cy="52" r="3" fill="#4A4A4A"/>
+          </svg>
+          <div class="table-label">6</div>
+        </div>
+
+        <!-- Sağ Yuvarlak Masalar -->
+        <div class="round-tables-row">
+          <div 
+            class="round-table" 
+            :class="{ 'selected': selectedTableName === 'Masa 12' }"
+            @click="selectTable('Masa 12', 11)"
+          >
+            <svg class="table-icon round-icon" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="40" cy="40" r="30" fill="#8B4513" stroke="#654321" stroke-width="2"/>
+              <circle cx="42" cy="42" r="30" fill="#A0522D" opacity="0.6"/>
+              <circle cx="40" cy="40" r="8" fill="#654321"/>
+              <circle cx="40" cy="15" r="4" fill="#4A4A4A"/>
+              <circle cx="65" cy="40" r="4" fill="#4A4A4A"/>
+              <circle cx="40" cy="65" r="4" fill="#4A4A4A"/>
+              <circle cx="15" cy="40" r="4" fill="#4A4A4A"/>
+            </svg>
+            <img src="/images/engelli-logo.png" class="accessibility-icon" alt="Engelli Masa" />
+            <div class="table-label">12</div>
+          </div>
+          
+          <div 
+            class="round-table" 
+            :class="{ 'selected': selectedTableName === 'Masa 13' }"
+            @click="selectTable('Masa 13', 12)"
+          >
+            <svg class="table-icon round-icon" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="40" cy="40" r="30" fill="#8B4513" stroke="#654321" stroke-width="2"/>
+              <circle cx="42" cy="42" r="30" fill="#A0522D" opacity="0.6"/>
+              <circle cx="40" cy="40" r="8" fill="#654321"/>
+              <circle cx="40" cy="15" r="4" fill="#4A4A4A"/>
+              <circle cx="65" cy="40" r="4" fill="#4A4A4A"/>
+              <circle cx="40" cy="65" r="4" fill="#4A4A4A"/>
+              <circle cx="15" cy="40" r="4" fill="#4A4A4A"/>
+            </svg>
+            <img src="/images/engelli-logo.png" class="accessibility-icon" alt="Engelli Masa" />
+            <div class="table-label">13</div>
+          </div>
+          
+          <div 
+            class="round-table" 
+            :class="{ 'selected': selectedTableName === 'Masa 14' }"
+            @click="selectTable('Masa 14', 13)"
+          >
+            <svg class="table-icon round-icon" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="40" cy="40" r="30" fill="#8B4513" stroke="#654321" stroke-width="2"/>
+              <circle cx="42" cy="42" r="30" fill="#A0522D" opacity="0.6"/>
+              <circle cx="40" cy="40" r="8" fill="#654321"/>
+              <circle cx="40" cy="15" r="4" fill="#4A4A4A"/>
+              <circle cx="65" cy="40" r="4" fill="#4A4A4A"/>
+              <circle cx="40" cy="65" r="4" fill="#4A4A4A"/>
+              <circle cx="15" cy="40" r="4" fill="#4A4A4A"/>
+            </svg>
+            <img src="/images/engelli-logo.png" class="accessibility-icon" alt="Engelli Masa" />
+            <div class="table-label">14</div>
+          </div>
+        </div>
+
+        <!-- Sağ Alt Uzun Masa -->
+        <div 
+          class="rectangular-table right-table" 
+          :class="{ 'selected': selectedTableName === 'Masa 7' }"
+          @click="selectTable('Masa 7', 6)"
+        >
+          <svg class="table-icon rectangular-icon" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="20" width="90" height="25" rx="3" fill="#8B4513" stroke="#654321" stroke-width="1"/>
+            <rect x="7" y="22" width="90" height="25" rx="3" fill="#A0522D" opacity="0.7"/>
+            <rect x="10" y="45" width="4" height="12" fill="#654321"/>
+            <rect x="86" y="45" width="4" height="12" fill="#654321"/>
+            <circle cx="20" cy="12" r="3" fill="#4A4A4A"/>
+            <circle cx="35" cy="12" r="3" fill="#4A4A4A"/>
+            <circle cx="50" cy="12" r="3" fill="#4A4A4A"/>
+            <circle cx="65" cy="12" r="3" fill="#4A4A4A"/>
+            <circle cx="80" cy="12" r="3" fill="#4A4A4A"/>
+            <circle cx="20" cy="52" r="3" fill="#4A4A4A"/>
+            <circle cx="35" cy="52" r="3" fill="#4A4A4A"/>
+            <circle cx="50" cy="52" r="3" fill="#4A4A4A"/>
+            <circle cx="65" cy="52" r="3" fill="#4A4A4A"/>
+            <circle cx="80" cy="52" r="3" fill="#4A4A4A"/>
+          </svg>
+          <div class="table-label">7</div>
+        </div>
+
+        <!-- Sağ En Alt Uzun Masa -->
+        <div 
+          class="rectangular-table right-table" 
+          :class="{ 'selected': selectedTableName === 'Masa 8' }"
+          @click="selectTable('Masa 8', 7)"
         >
           <svg class="table-icon rectangular-icon" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
             <rect x="5" y="20" width="90" height="25" rx="3" fill="#8B4513" stroke="#654321" stroke-width="1"/>
@@ -322,135 +457,6 @@
             <circle cx="80" cy="52" r="3" fill="#4A4A4A"/>
           </svg>
           <div class="table-label">8</div>
-        </div>
-
-        <!-- Sağ Üst Uzun Masa -->
-        <div 
-          class="rectangular-table right-table" 
-          :class="{ 'selected': selectedTable === 'masa-9' }"
-          @click="selectTable('masa-9', 'Masa 9')"
-        >
-          <svg class="table-icon rectangular-icon" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
-            <rect x="5" y="20" width="90" height="25" rx="3" fill="#8B4513" stroke="#654321" stroke-width="1"/>
-            <rect x="7" y="22" width="90" height="25" rx="3" fill="#A0522D" opacity="0.7"/>
-            <rect x="10" y="45" width="4" height="12" fill="#654321"/>
-            <rect x="86" y="45" width="4" height="12" fill="#654321"/>
-            <circle cx="20" cy="12" r="3" fill="#4A4A4A"/>
-            <circle cx="35" cy="12" r="3" fill="#4A4A4A"/>
-            <circle cx="50" cy="12" r="3" fill="#4A4A4A"/>
-            <circle cx="65" cy="12" r="3" fill="#4A4A4A"/>
-            <circle cx="80" cy="12" r="3" fill="#4A4A4A"/>
-            <circle cx="20" cy="52" r="3" fill="#4A4A4A"/>
-            <circle cx="35" cy="52" r="3" fill="#4A4A4A"/>
-            <circle cx="50" cy="52" r="3" fill="#4A4A4A"/>
-            <circle cx="65" cy="52" r="3" fill="#4A4A4A"/>
-            <circle cx="80" cy="52" r="3" fill="#4A4A4A"/>
-          </svg>
-          <div class="table-label">9</div>
-        </div>
-
-        <!-- Sağ Yuvarlak Masalar -->
-        <div class="round-tables-row">
-          <div 
-            class="round-table" 
-            :class="{ 'selected': selectedTable === 'masa-10' }"
-            @click="selectTable('masa-10', 'Masa 10')"
-          >
-            <svg class="table-icon round-icon" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="40" cy="40" r="30" fill="#8B4513" stroke="#654321" stroke-width="2"/>
-              <circle cx="42" cy="42" r="30" fill="#A0522D" opacity="0.6"/>
-              <circle cx="40" cy="40" r="8" fill="#654321"/>
-              <circle cx="40" cy="15" r="4" fill="#4A4A4A"/>
-              <circle cx="65" cy="40" r="4" fill="#4A4A4A"/>
-              <circle cx="40" cy="65" r="4" fill="#4A4A4A"/>
-              <circle cx="15" cy="40" r="4" fill="#4A4A4A"/>
-            </svg>
-            <div class="table-label">10</div>
-          </div>
-          
-          <div 
-            class="round-table" 
-            :class="{ 'selected': selectedTable === 'masa-11' }"
-            @click="selectTable('masa-11', 'Masa 11')"
-          >
-            <svg class="table-icon round-icon" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="40" cy="40" r="30" fill="#8B4513" stroke="#654321" stroke-width="2"/>
-              <circle cx="42" cy="42" r="30" fill="#A0522D" opacity="0.6"/>
-              <circle cx="40" cy="40" r="8" fill="#654321"/>
-              <circle cx="40" cy="15" r="4" fill="#4A4A4A"/>
-              <circle cx="65" cy="40" r="4" fill="#4A4A4A"/>
-              <circle cx="40" cy="65" r="4" fill="#4A4A4A"/>
-              <circle cx="15" cy="40" r="4" fill="#4A4A4A"/>
-            </svg>
-            <div class="table-label">11</div>
-          </div>
-          
-          <div 
-            class="round-table" 
-            :class="{ 'selected': selectedTable === 'masa-12' }"
-            @click="selectTable('masa-12', 'Masa 12')"
-          >
-            <svg class="table-icon round-icon" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="40" cy="40" r="30" fill="#8B4513" stroke="#654321" stroke-width="2"/>
-              <circle cx="42" cy="42" r="30" fill="#A0522D" opacity="0.6"/>
-              <circle cx="40" cy="40" r="8" fill="#654321"/>
-              <circle cx="40" cy="15" r="4" fill="#4A4A4A"/>
-              <circle cx="65" cy="40" r="4" fill="#4A4A4A"/>
-              <circle cx="40" cy="65" r="4" fill="#4A4A4A"/>
-              <circle cx="15" cy="40" r="4" fill="#4A4A4A"/>
-            </svg>
-            <div class="table-label">12</div>
-          </div>
-        </div>
-
-        <!-- Sağ Alt Uzun Masa -->
-        <div 
-          class="rectangular-table right-table" 
-          :class="{ 'selected': selectedTable === 'masa-13' }"
-          @click="selectTable('masa-13', 'Masa 13')"
-        >
-          <svg class="table-icon rectangular-icon" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
-            <rect x="5" y="20" width="90" height="25" rx="3" fill="#8B4513" stroke="#654321" stroke-width="1"/>
-            <rect x="7" y="22" width="90" height="25" rx="3" fill="#A0522D" opacity="0.7"/>
-            <rect x="10" y="45" width="4" height="12" fill="#654321"/>
-            <rect x="86" y="45" width="4" height="12" fill="#654321"/>
-            <circle cx="20" cy="12" r="3" fill="#4A4A4A"/>
-            <circle cx="35" cy="12" r="3" fill="#4A4A4A"/>
-            <circle cx="50" cy="12" r="3" fill="#4A4A4A"/>
-            <circle cx="65" cy="12" r="3" fill="#4A4A4A"/>
-            <circle cx="80" cy="12" r="3" fill="#4A4A4A"/>
-            <circle cx="20" cy="52" r="3" fill="#4A4A4A"/>
-            <circle cx="35" cy="52" r="3" fill="#4A4A4A"/>
-            <circle cx="50" cy="52" r="3" fill="#4A4A4A"/>
-            <circle cx="65" cy="52" r="3" fill="#4A4A4A"/>
-            <circle cx="80" cy="52" r="3" fill="#4A4A4A"/>
-          </svg>
-          <div class="table-label">13</div>
-        </div>
-
-        <!-- Sağ En Alt Uzun Masa -->
-        <div 
-          class="rectangular-table right-table" 
-          :class="{ 'selected': selectedTable === 'masa-14' }"
-          @click="selectTable('masa-14', 'Masa 14')"
-        >
-          <svg class="table-icon rectangular-icon" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
-            <rect x="5" y="20" width="90" height="25" rx="3" fill="#8B4513" stroke="#654321" stroke-width="1"/>
-            <rect x="7" y="22" width="90" height="25" rx="3" fill="#A0522D" opacity="0.7"/>
-            <rect x="10" y="45" width="4" height="12" fill="#654321"/>
-            <rect x="86" y="45" width="4" height="12" fill="#654321"/>
-            <circle cx="20" cy="12" r="3" fill="#4A4A4A"/>
-            <circle cx="35" cy="12" r="3" fill="#4A4A4A"/>
-            <circle cx="50" cy="12" r="3" fill="#4A4A4A"/>
-            <circle cx="65" cy="12" r="3" fill="#4A4A4A"/>
-            <circle cx="80" cy="12" r="3" fill="#4A4A4A"/>
-            <circle cx="20" cy="52" r="3" fill="#4A4A4A"/>
-            <circle cx="35" cy="52" r="3" fill="#4A4A4A"/>
-            <circle cx="50" cy="52" r="3" fill="#4A4A4A"/>
-            <circle cx="65" cy="52" r="3" fill="#4A4A4A"/>
-            <circle cx="80" cy="52" r="3" fill="#4A4A4A"/>
-          </svg>
-          <div class="table-label">14</div>
         </div>
       </div>
     </div>
@@ -475,13 +481,13 @@
                   :key="'top-' + i"
                   class="chair-seat"
                   :class="{ 
-                    'occupied': chairStatus[i - 1] === 'occupied',
-                    'selected': selectedChairs.includes(i - 1),
-                    'available': chairStatus[i - 1] === 'available'
+                    'occupied': seats[(tableNum * 8) + i - 1].isReserved === true,
+                    'selected': selectedChair === (tableNum * 8) + i,
+                    'available': seats[(tableNum * 8) + i - 1].isReserved === false
                   }"
-                  @click="toggleChair(i - 1)"
-                >
-                  {{ i }}
+                  @click="toggleChair((tableNum * 8) + i)"
+                  >
+                  {{ (tableNum * 8) + i }}
                 </div>
               </div>
               
@@ -494,20 +500,20 @@
                     :key="'left-' + i"
                     class="chair-seat"
                     :class="{ 
-                      'occupied': chairStatus[i + 2] === 'occupied',
-                      'selected': selectedChairs.includes(i + 2),
-                      'available': chairStatus[i + 2] === 'available'
+                    'occupied': seats[(tableNum * 8) + i + 3 - 1].isReserved === true,
+                    'selected': selectedChair === (tableNum * 8) + i + 3,
+                    'available': seats[(tableNum * 8) + i + 3 - 1].isReserved === false
                     }"
-                    @click="toggleChair(i + 2)"
-                  >
-                    {{ i + 3 }}
+                    @click="toggleChair((tableNum * 8) + i + 3)"
+                    >
+                    {{ (tableNum * 8) + i + 3 }}
                   </div>
                 </div>
                 
                 <!-- Masa (Orta) -->
                 <div class="table-center">
                   <div class="table-surface-center">
-                    <span class="table-number-center">{{ selectedTable.split('-')[1] }}</span>
+                    <span class="table-number-center">{{ selectedTableName }}</span>
                   </div>
                 </div>
                 
@@ -518,13 +524,13 @@
                     :key="'right-' + i"
                     class="chair-seat"
                     :class="{ 
-                      'occupied': chairStatus[i + 3] === 'occupied',
-                      'selected': selectedChairs.includes(i + 3),
-                      'available': chairStatus[i + 3] === 'available'
+                    'occupied': seats[(tableNum * 8) + i + 4 - 1].isReserved === true,
+                    'selected': selectedChair === (tableNum * 8) + i + 4,
+                    'available': seats[(tableNum * 8) + i + 4 - 1].isReserved === false
                     }"
-                    @click="toggleChair(i + 3)"
-                  >
-                    {{ i + 4 }}
+                    @click="toggleChair((tableNum * 8) + i + 4)"
+                    >
+                    {{ (tableNum * 8) + i + 4 }}
                   </div>
                 </div>
               </div>
@@ -536,13 +542,13 @@
                   :key="'bottom-' + i"
                   class="chair-seat"
                   :class="{ 
-                    'occupied': chairStatus[i + 4] === 'occupied',
-                    'selected': selectedChairs.includes(i + 4),
-                    'available': chairStatus[i + 4] === 'available'
+                    'occupied': seats[(tableNum * 8) + i + 5 - 1].isReserved === true,
+                    'selected': selectedChair === (tableNum * 8) + i + 5,
+                    'available': seats[(tableNum * 8) + i + 5 - 1].isReserved === false
                   }"
-                  @click="toggleChair(i + 4)"
-                >
-                  {{ i + 5 }}
+                  @click="toggleChair((tableNum * 8) + i + 5)"
+                  >
+                  {{ (tableNum * 8) + i + 5 }}
                 </div>
               </div>
             </div>
@@ -550,48 +556,30 @@
             <!-- Yuvarlak Masa Görünümü -->
             <div v-else class="round-table-modal">
               <div class="table-surface-round">
-                <span class="table-number">{{ selectedTable.split('-')[1] }}</span>
-                
+                <span class="table-number">{{ selectedTableName }}</span>
                 <!-- Sandalyeler Çember Halinde (1-10) -->
                 <div 
                   v-for="i in 4" 
                   :key="'round-' + i"
                   class="chair-seat round-chair"
                   :class="{ 
-                    'occupied': chairStatus[i - 1] === 'occupied',
-                    'selected': selectedChairs.includes(i - 1),
-                    'available': chairStatus[i - 1] === 'available'
+                    'occupied': seats[(tableNum * 8) - (4 * (tableNum - 8)) + i - 1].isReserved === true,
+                    'selected': selectedChair === (tableNum * 8) - (4 * (tableNum - 8)) + i,
+                    'available': seats[(tableNum * 8) - (4 * (tableNum - 8)) + i - 1].isReserved === false
                   }"
                   :style="getChairPosition(i - 1)"
-                  @click="toggleChair(i - 1)"
-                >
-                  {{ i }}
+                  @click="toggleChair((tableNum * 8) - (4 * (tableNum - 8)) + i)"
+                  >
+                  {{ (tableNum * 8) - (4 * (tableNum - 8)) + i }}
                 </div>
               </div>
             </div>
           </div>
           
-          <div class="chair-legend">
-            <div class="legend-item">
-              <div class="legend-chair available"></div>
-              <span>Boş ({{ availableChairs.length }})</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-chair occupied"></div>
-              <span>Dolu ({{ occupiedChairs.length }})</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-chair selected"></div>
-              <span>Seçilen ({{ selectedChairs.length }})</span>
-            </div>
-          </div>
-          
-          <div class="selected-chairs-info" v-if="selectedChairs.length > 0">
-            <h4>✅ Seçilen Sandalyeler:</h4>
+          <div class="selected-chair-info" v-if="selectedChair">
+            <h4 class="weird-header">Seçilen Sandalye:</h4>
             <div class="selected-list">
-              <span v-for="chair in selectedChairs" :key="chair" class="selected-chair-tag">
-                {{ chair + 1 }}
-              </span>
+              <span class="selected-chair-tag"> {{ selectedChair }}</span>
             </div>
           </div>
         </div>
@@ -601,13 +589,47 @@
           <button 
             class="confirm-btn" 
             @click="confirmReservation"
-            :disabled="selectedChairs.length === 0"
+            :disabled="selectedChair === null"
           >
-            Rezervasyonu Onayla ({{ selectedChairs.length }} kişi)
+            Rezervasyonu Onayla
           </button>
         </div>
       </div>
     </div>
+
+    <div class="modal-overlay" v-if="showDurationModal" @click="showDurationModal = false">
+      <div class="modal-content" @click.stop>
+        <div class="modal-header">
+          <h3>⏱ Süre Seçimi</h3>
+          <button class="close-btn" @click="showDurationModal = false">✕</button>
+        </div>
+        <div class="modal-body">
+          <p>Lütfen rezervasyon süresini seçin:</p>
+          <div class="duration-options">
+            <button 
+              v-for="hour in [1, 2, 3, 4, 5]" 
+              :key="hour" 
+              @click="selectedDuration = hour"
+              :class="{ 'selected-duration': selectedDuration === hour }"
+            >
+              {{ hour }} saat
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="cancel-modal-btn" @click="showDurationModal = false">İptal</button>
+          <button 
+            class="confirm-btn" 
+            :disabled="!selectedDuration" 
+            @click="finalizeReservation"
+          >
+            Onayla
+          </button>
+        </div>
+      </div>
+    </div>
+
+
   </div>
 </template>
 
@@ -619,71 +641,61 @@ export default {
   name: 'LibraryReservation',
   data() {
     return {
-      selectedTable: null,
       selectedTableName: '',
+      tableNum: 0,
       showModal: false,
-      selectedChairs: [],
-      chairStatus: [], // 'available', 'occupied',
-      seats: []
+      selectedChair: null,
+      chairStatus: null, // 'available', 'occupied'
+      seats: [],
+      showDurationModal: false,     // Süre seçimi modalı
+      selectedDuration: null        // Seçilen süre
     }
   },
   computed: {
     isRectangularTable() {
-      // Masa 1, 2, 6, 7, 8, 9, 13, 14 dikdörtgen masalar
-      const rectangularTables = ['masa-1', 'masa-2', 'masa-6', 'masa-7', 'masa-8', 'masa-9', 'masa-13', 'masa-14'];
-      return this.selectedTable && rectangularTables.includes(this.selectedTable);
-    },
-    availableChairs() {
-      return this.chairStatus.map((status, index) => status === 'available' ? index : null).filter(x => x !== null);
-    },
-    occupiedChairs() {
-      return this.chairStatus.map((status, index) => status === 'occupied' ? index : null).filter(x => x !== null);
+      // Masa 1, 2, 3, 4, 5, 6, 7, 8 dikdörtgen masalar
+      const rectangularTables = ['Masa 1', 'Masa 2', 'Masa 3', 'Masa 4', 'Masa 5', 'Masa 6', 'Masa 7', 'Masa 8'];
+      return this.selectedTableName && rectangularTables.includes(this.selectedTableName);
     }
   },
   methods: {
-    selectTable(tableId, tableName) {
-      this.selectedTable = tableId;
+    selectTable(tableName, tableNum) {
       this.selectedTableName = tableName;
+      this.tableNum = tableNum;
       this.openModal();
     },
     clearSelection() {
-      this.selectedTable = null;
       this.selectedTableName = '';
     },
     openModal() {
       this.showModal = true;
-      this.initializeChairs();
     },
     closeModal() {
       this.showModal = false;
-      this.selectedChairs = [];
+      this.selectedChair = null;
       this.clearSelection();
     },
-    initializeChairs() {
-      const chairCount = this.getTableCapacity();
-      this.chairStatus = [];
-      
-      // Tüm sandalyeler için status belirleme
-      for (let i = 0; i < chairCount; i++) {
-        // %70 available, %30 occupied olacak şekilde rastgele dağıtım
-        this.chairStatus.push(Math.random() > 0.3 ? 'available' : 'occupied');
+    async toggleChair(seatNumber) {
+      if(!this.$store.state.token){
+        alert("Yorum yapmak için giriş yapmanız gerekiyor");
+        this.$router.push('/giris-yap');
+        return;
       }
-      
-      // Debug için konsola yazdır
-      console.log(`${this.selectedTableName} için ${chairCount} sandalye initialize edildi:`, this.chairStatus);
-    },
-    toggleChair(chairIndex) {
-      if (this.chairStatus[chairIndex] === 'occupied') return;
-      
-      const index = this.selectedChairs.indexOf(chairIndex);
-      if (index > -1) {
-        this.selectedChairs.splice(index, 1);
-      } else {
-        this.selectedChairs.push(chairIndex);
+
+      if (this.seats[seatNumber - 1].isReserved === true) return;
+
+      let response = await axios.get("http://35.158.197.224/api/auth/get-user-list");
+      let user = response.data.data.find(u => u.id === jwtDecode(this.$store.state.token).Id);
+      console.log(user); 
+      if(this.seats[seatNumber - 1].isMalformed === true && user.isMalformed === false){
+        alert("Bu masa sadece engelli kullanıcılarımız içindir!");
+        return;
       }
+
+      this.selectedChair = seatNumber;
     },
     getChairPosition(index) {
-      const angle = (index * 90) * (Math.PI / 180); // 4 sandalye = 360°/10 = 36°
+      const angle = (index * 90) * (Math.PI / 180); // 4 sandalye = 360°/4 = 90°
       const radius = 120;
       const centerX = 150;
       const centerY = 150;
@@ -698,13 +710,36 @@ export default {
       };
     },
     confirmReservation() {
-      if (this.selectedChairs.length === 0) return;
+      if (this.selectedChair === null) return;
       
-      const chairNumbers = this.selectedChairs.map(i => i + 1).sort((a, b) => a - b);
-      alert(`✅ ${this.selectedTableName} için ${chairNumbers.join(', ')} numaralı sandalyeler rezerve edildi!`);
-      
-      this.closeModal();
+      // console.log(this.seats[this.selectedChair - 1]);
+      this.showDurationModal = true;
+    },
+    async finalizeReservation(){
+      if (!this.selectedDuration) return;
+      let seat = this.seats[this.selectedChair - 1];
+
+      console.log(jwtDecode(this.$store.state.token).Id);
+      console.log(seat.id);
+      console.log(this.selectedDuration);
+
+      let response = await axios.post("http://35.158.197.224/api/reservation/reserve-seat-with-transaction", {
+        appUserId: jwtDecode(this.$store.state.token).Id,
+        seatId: seat.id,
+        duration: this.selectedDuration * 60
+      })
+
+      console.log(response);
+
+      alert(`✅ ${this.selectedTableName} için ${this.selectedChair} numaralı sandalye ${this.selectedDuration} saatliğine rezerve edildi!`);
+
+      // Kapat ve sıfırla
+      this.showDurationModal = false;
+      this.showModal = false;
+      this.selectedChair = null;
+      this.selectedDuration = null;
       this.clearSelection();
+      this.$router.go(0);
     },
     getTableCapacity() {
       // Dikdörtgen masalar 8 kişilik, yuvarlak masalar 4 kişilik
@@ -719,8 +754,9 @@ export default {
     },
     async getSeats(){
       let response = await axios.get("http://35.158.197.224/api/seat/get-seat-list");
+      let sortedSeats = response.data.data.sort((a, b) => parseInt(a.seatNumber) - parseInt(b.seatNumber));
       console.log(response.data.data);
-      this.seats = response.data.data;
+      this.seats = sortedSeats;
       console.log(this.seats);
     }
   },
@@ -876,8 +912,8 @@ export default {
 }
 
 .round-table {
-  width: 90px;
-  height: 90px;
+  width: 100px;
+  height: 100px;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
@@ -918,8 +954,23 @@ export default {
 }
 
 .round-icon {
-  width: 70px;
-  height: 70px;
+  width: 90px;
+  height: 90px;
+}
+
+.accessibility-icon {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  color: white;
+  background-color: transparent;
+  border-radius: 50%;
+  padding: 4px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
 }
 
 .table-label {
@@ -1202,11 +1253,9 @@ export default {
 }
 
 .chair-seat.selected {
-  background: linear-gradient(145deg, #f39c12, #e67e22);
   color: white;
-  border-color: #d35400;
+  outline: 3px solid black;
   transform: translateY(-2px) scale(1.1);
-  box-shadow: 0 6px 12px rgba(243, 156, 18, 0.4);
 }
 
 .round-chair {
@@ -1262,6 +1311,10 @@ export default {
   color: #2c3e50;
 }
 
+.weird-header{
+  color: black;
+}
+
 .selected-list {
   display: flex;
   flex-wrap: wrap;
@@ -1269,7 +1322,7 @@ export default {
 }
 
 .selected-chair-tag {
-  background: linear-gradient(145deg, #f39c12, #e67e22);
+  background: linear-gradient(145deg, #27ae60, #2ecc71);
   color: white;
   padding: 0.3rem 0.8rem;
   border-radius: 15px;
@@ -1299,8 +1352,8 @@ export default {
 }
 
 .cancel-modal-btn {
-  background: linear-gradient(145deg, #95a5a6, #bdc3c7);
-  color: #2c3e50;
+  background: red;
+  color: white;
 }
 
 .cancel-modal-btn:hover {
@@ -1382,4 +1435,32 @@ export default {
   font-weight: bold;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
+
+.duration-options {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.duration-options button {
+  padding: 10px 16px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.duration-options button:hover {
+  border-color: #007bff;
+}
+
+.duration-options .selected-duration {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
 </style>
