@@ -1,7 +1,7 @@
 <template>
-  <div class="books-page">
+  <div :class="lightsOff ? 'books-page-lightsoff' : 'books-page'">
     <div class="container">
-      <h1 class="page-title">Kitap Arama</h1>
+      <h1 :class="lightsOff ? 'page-title-lightsoff' : 'page-title'">Kitap Arama</h1>
       
       <div class="search-container">
         <input 
@@ -127,10 +127,6 @@
                 </div>
                 
                 <p class="modal-book-description">{{ selectedBook.description }}</p>
-                <div class="modal-book-status">
-                  <span :class="['status-indicator', selectedBook.isAvailable ? 'available' : 'not-available']"></span>
-                  {{ selectedBook.isAvailable ? 'Mevcut' : 'Ödünç Verilmiş' }}
-                </div>
                 
                 <div class="modal-actions">
                   <button 
@@ -239,7 +235,7 @@
                     </div>
                   </div>
                   <p class="comment-text">{{ comment.comment }}</p>
-                  <button v-if="comment.appuUserId === userId" class="comment-delete-btn">Sil <i class="bi bi-trash"></i></button>
+                  <button v-if="comment.appuUserId === userId" :class="colorBlind ? 'comment-delete-btn-color' : 'comment-delete-btn'">Sil <i class="bi bi-trash"></i></button>
                 </div>
               </div>
               
@@ -321,6 +317,12 @@ computed: {
       return this.newComment.userName.trim() !== '' && 
              this.newComment.rating > 0 && 
              this.newComment.text.trim() !== '';
+    },
+    colorBlind() {
+       return this.$store.state.colorBlindness;
+    },
+    lightsOff() {
+      return this.$store.state.lightsOff;
     }
 },
 methods: {
@@ -387,7 +389,7 @@ methods: {
 
       if(response.data.success){
         alert('Kitabı başarıyla ödünç aldınız!');
-        this.selectBook(this.selectedBook);
+        this.$router.push('/odunc-kitaplar');
       }
       else{
         alert("Bir hata oluştu...");
@@ -487,6 +489,12 @@ methods: {
   padding: 2rem 0;
 }
 
+.books-page-lightsoff {
+  background-color: #343a40;
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -496,6 +504,13 @@ methods: {
 .page-title {
   text-align: center;
   color: #1F2937;
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+}
+
+.page-title-lightsoff {
+  text-align: center;
+  color: white;
   margin-bottom: 2rem;
   font-size: 2.5rem;
 }
@@ -1209,10 +1224,28 @@ methods: {
   border-radius: 8px;
 }
 
+.comment-delete-btn-color{
+  color: white;
+  background-color: darkorange;
+  font-weight: 500;
+  font-size: 16px;
+  border: 0;
+  outline: 0;
+  padding: 2px 24px;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
 .comment-delete-btn:hover{
   color: red;
   background-color: white;
   outline: 1px solid red;
+}
+
+.comment-delete-btn-color:hover{
+  color: darkorange;
+  background-color: white;
+  outline: 1px solid darkorange;
 }
 
 /* Responsive Comments */

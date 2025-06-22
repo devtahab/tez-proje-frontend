@@ -1,9 +1,9 @@
 <template>
-  <div class="loan-page">
-    <h1 class="loan-title">📚 Aktif Ödünç Alınan Kitaplar</h1>
+  <div :class="lightsOff ? 'loan-page-lightsoff': 'loan-page'">
+    <h1 :class="lightsOff ? 'loan-title-lightsoff': 'loan-title'">📚 Aktif Ödünç Alınan Kitaplar</h1>
 
-    <div v-if="loading" class="loan-loading">Yükleniyor...</div>
-    <div v-else-if="borrowings.length === 0" class="loan-empty">
+    <div v-if="loading" :class="lightsOff ? 'loan-loading-lightsoff' : 'loan-loading'">Yükleniyor...</div>
+    <div v-else-if="borrowings.length === 0" :class=" lightsOff ? 'loan-empty-lightsoff' : 'loan-empty'">
       Hiç ödünç alınan kitap bulunamadı.
     </div>
 
@@ -35,6 +35,11 @@ export default {
       borrowings: [],
       loading: true,
     };
+  },
+  computed: {
+    lightsOff() {
+      return this.$store.state.lightsOff;
+    } 
   },
   async created() {
     if(!this.$store.state.token){
@@ -92,6 +97,13 @@ export default {
   min-height: 100vh;
 }
 
+.loan-page-lightsoff {
+  padding: 2rem 3rem;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #343a40;
+  min-height: 100vh;
+}
+
 .loan-title {
   font-size: 2rem;
   font-weight: bold;
@@ -100,10 +112,26 @@ export default {
   text-align: center;
 }
 
+.loan-title-lightsoff {
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
 .loan-loading,
 .loan-empty {
   text-align: center;
   color: #666;
+  font-size: 1.1rem;
+  margin-top: 2rem;
+}
+
+.loan-loading-lightsoff,
+.loan-empty-lightsoff {
+  text-align: center;
+  color: white;
   font-size: 1.1rem;
   margin-top: 2rem;
 }

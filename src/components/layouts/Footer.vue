@@ -6,7 +6,7 @@
         <!-- Üst Kısım -->
         <div class="footer-top">
           <div class="footer-left">
-            <h3 class="footer-title">LibPoint <span class="kutuphane">Kütüphane</span></h3>
+            <h3 class="footer-title">LibPoint <span :class="colorBlind ? 'kutuphane-color' : 'kutuphane'">Kütüphane</span></h3>
             <p class="footer-description">
               Kitaplara kolayca ulaşın, rezervasyon yapın.
             </p>
@@ -28,7 +28,7 @@
             <!-- Hakkında -->
             <div class="footer-link-group">
               <h4 class="footer-links-title">Hakkımızda</h4>
-              <div class="title-underline"></div>
+              <div :class="colorBlind ? 'title-underline-color' : 'title-underline'"></div>
               <ul class="footer-links-list">
                 <li><router-link to="/hakkimizda#kutuphane-hakkinda">Kütüphane Hakkında</router-link></li>
                 <li><router-link to="/hakkimizda#kurallar">Kurallar</router-link></li>
@@ -38,7 +38,7 @@
             <!-- Yardım -->
             <div class="footer-link-group">
               <h4 class="footer-links-title">Yardım</h4>
-              <div class="title-underline"></div>
+              <div :class="colorBlind ? 'title-underline-color' : 'title-underline'"></div>
               <ul class="footer-links-list">
                 <li><router-link to="/yardim#siksorular">Sık Sorulanlar</router-link></li>
                 <li><router-link to="/yardim#destek">Destek</router-link></li>
@@ -50,7 +50,7 @@
 
         <!-- Alt Kısım -->
         <div class="footer-bottom">
-          <p class="copyright">© 2025 <span class="kutuphane">LibPoint</span>. Tüm hakları saklıdır.</p>
+          <p class="copyright">© 2025 <span :class="colorBlind ? 'kutuphane-color' : 'kutuphane'">LibPoint</span>. Tüm hakları saklıdır.</p>
           <div class="footer-bottom-links">
             <a href="#">Gizlilik</a>
             <span class="separator">•</span>
@@ -148,6 +148,11 @@
   font-weight: 800;
 }
 
+.kutuphane-color{
+  color: blue;
+  font-weight: 800;
+}
+
 .footer-description {
   color: #9ca3af;
   font-size: 1rem;
@@ -220,6 +225,14 @@
   height: 3px;
   width: 40px;
   background: #11B981;
+  margin-bottom: 1.2rem;
+  border-radius: 2px;
+}
+
+.title-underline-color{
+  height: 3px;
+  width: 40px;
+  background: blue;
   margin-bottom: 1.2rem;
   border-radius: 2px;
 }

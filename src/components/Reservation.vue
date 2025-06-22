@@ -1,6 +1,6 @@
 <template>
-  <div class="library-floor-plan">
-    <h2 class="library-title">Kütüphane Rezervasyon Sistemi</h2>
+  <div :class="lightsOff ? 'library-floor-plan-lightsoff' : 'library-floor-plan'">
+    <h2 :class="lightsOff ? 'library-title-lightsoff' : 'library-title'">Kütüphane Rezervasyon Sistemi</h2>
     
     <div class="floor-container">
       <!-- Sol Taraf -->
@@ -476,14 +476,16 @@
               
               <!-- Üst Taraf Sandalyeler (1-8) -->
               <div class="chair-row top-row">
-                <div 
+                <div
                   v-for="i in 3" 
                   :key="'top-' + i"
                   class="chair-seat"
                   :class="{ 
-                    'occupied': seats[(tableNum * 8) + i - 1].isReserved === true,
+                    'occupied': seats[(tableNum * 8) + i - 1].isReserved === true && !colorBlind,
+                    'occupied-color': seats[(tableNum * 8) + i - 1].isReserved === true && colorBlind,
                     'selected': selectedChair === (tableNum * 8) + i,
-                    'available': seats[(tableNum * 8) + i - 1].isReserved === false
+                    'available': seats[(tableNum * 8) + i - 1].isReserved === false && !colorBlind,
+                    'available-color': seats[(tableNum * 8) + i - 1].isReserved === false && colorBlind,
                   }"
                   @click="toggleChair((tableNum * 8) + i)"
                   >
@@ -500,9 +502,11 @@
                     :key="'left-' + i"
                     class="chair-seat"
                     :class="{ 
-                    'occupied': seats[(tableNum * 8) + i + 3 - 1].isReserved === true,
+                    'occupied': seats[(tableNum * 8) + i + 3 - 1].isReserved === true && !colorBlind,
+                    'occupied-color': seats[(tableNum * 8) + i + 3 - 1].isReserved === true && colorBlind,
                     'selected': selectedChair === (tableNum * 8) + i + 3,
-                    'available': seats[(tableNum * 8) + i + 3 - 1].isReserved === false
+                    'available': seats[(tableNum * 8) + i + 3 - 1].isReserved === false && !colorBlind,
+                    'available-color': seats[(tableNum * 8) + i + 3 - 1].isReserved === false && colorBlind,
                     }"
                     @click="toggleChair((tableNum * 8) + i + 3)"
                     >
@@ -524,9 +528,11 @@
                     :key="'right-' + i"
                     class="chair-seat"
                     :class="{ 
-                    'occupied': seats[(tableNum * 8) + i + 4 - 1].isReserved === true,
+                    'occupied': seats[(tableNum * 8) + i + 4 - 1].isReserved === true && !colorBlind,
+                    'occupied-color': seats[(tableNum * 8) + i + 4 - 1].isReserved === true && colorBlind,
                     'selected': selectedChair === (tableNum * 8) + i + 4,
-                    'available': seats[(tableNum * 8) + i + 4 - 1].isReserved === false
+                    'available': seats[(tableNum * 8) + i + 4 - 1].isReserved === false && !colorBlind,
+                    'available-color': seats[(tableNum * 8) + i + 4 - 1].isReserved === false && colorBlind,
                     }"
                     @click="toggleChair((tableNum * 8) + i + 4)"
                     >
@@ -542,9 +548,11 @@
                   :key="'bottom-' + i"
                   class="chair-seat"
                   :class="{ 
-                    'occupied': seats[(tableNum * 8) + i + 5 - 1].isReserved === true,
+                    'occupied': seats[(tableNum * 8) + i + 5 - 1].isReserved === true && !colorBlind,
+                    'occupied-color': seats[(tableNum * 8) + i + 5 - 1].isReserved === true && colorBlind,
                     'selected': selectedChair === (tableNum * 8) + i + 5,
-                    'available': seats[(tableNum * 8) + i + 5 - 1].isReserved === false
+                    'available': seats[(tableNum * 8) + i + 5 - 1].isReserved === false && !colorBlind,
+                    'available-color': seats[(tableNum * 8) + i + 5 - 1].isReserved === false && colorBlind,
                   }"
                   @click="toggleChair((tableNum * 8) + i + 5)"
                   >
@@ -563,9 +571,11 @@
                   :key="'round-' + i"
                   class="chair-seat round-chair"
                   :class="{ 
-                    'occupied': seats[(tableNum * 8) - (4 * (tableNum - 8)) + i - 1].isReserved === true,
+                    'occupied': seats[(tableNum * 8) - (4 * (tableNum - 8)) + i - 1].isReserved === true && !colorBlind,
+                    'occupied-color': seats[(tableNum * 8) - (4 * (tableNum - 8)) + i - 1].isReserved === true && colorBlind,
                     'selected': selectedChair === (tableNum * 8) - (4 * (tableNum - 8)) + i,
-                    'available': seats[(tableNum * 8) - (4 * (tableNum - 8)) + i - 1].isReserved === false
+                    'available': seats[(tableNum * 8) - (4 * (tableNum - 8)) + i - 1].isReserved === false && !colorBlind,
+                    'available-color': seats[(tableNum * 8) - (4 * (tableNum - 8)) + i - 1].isReserved === false && colorBlind,
                   }"
                   :style="getChairPosition(i - 1)"
                   @click="toggleChair((tableNum * 8) - (4 * (tableNum - 8)) + i)"
@@ -579,15 +589,15 @@
           <div class="selected-chair-info" v-if="selectedChair">
             <h4 class="weird-header">Seçilen Sandalye:</h4>
             <div class="selected-list">
-              <span class="selected-chair-tag"> {{ selectedChair }}</span>
+              <span :class="colorBlind ? 'selected-chair-tag-color' : 'selected-chair-tag'"> {{ selectedChair }}</span>
             </div>
           </div>
         </div>
         
         <div class="modal-footer">
-          <button class="cancel-modal-btn" @click="closeModal">İptal</button>
+          <button :class="colorBlind ? 'cancel-modal-btn-color' : 'cancel-modal-btn'" @click="closeModal">İptal</button>
           <button 
-            class="confirm-btn" 
+            :class="colorBlind ? 'confirm-btn-color' : 'confirm-btn'" 
             @click="confirmReservation"
             :disabled="selectedChair === null"
           >
@@ -617,9 +627,9 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="cancel-modal-btn" @click="showDurationModal = false">İptal</button>
+          <button :class="colorBlind ? 'cancel-modal-btn-color' : 'cancel-modal-btn'" @click="showDurationModal = false">İptal</button>
           <button 
-            class="confirm-btn" 
+            :class="colorBlind ? 'confirm-btn-color' : 'confirm-btn'" 
             :disabled="!selectedDuration" 
             @click="finalizeReservation"
           >
@@ -656,6 +666,12 @@ export default {
       // Masa 1, 2, 3, 4, 5, 6, 7, 8 dikdörtgen masalar
       const rectangularTables = ['Masa 1', 'Masa 2', 'Masa 3', 'Masa 4', 'Masa 5', 'Masa 6', 'Masa 7', 'Masa 8'];
       return this.selectedTableName && rectangularTables.includes(this.selectedTableName);
+    },
+    colorBlind() {
+      return this.$store.state.colorBlindness;
+    },
+    lightsOff() {
+      return this.$store.state.lightsOff;
     }
   },
   methods: {
@@ -774,9 +790,24 @@ export default {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.library-floor-plan-lightsoff {
+  padding: 2rem;
+  background: #343a40;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 .library-title {
   text-align: center;
   color: #2c3e50;
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.library-title-lightsoff {
+  text-align: center;
+  color: white;
   margin-bottom: 2rem;
   font-size: 2.5rem;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
@@ -1239,14 +1270,32 @@ export default {
   color: white;
 }
 
+.chair-seat.available-color {
+  background: blue;
+  color: white;
+}
+
 .chair-seat.available:hover {
   background: linear-gradient(145deg, #229954, #27ae60);
   transform: translateY(-2px) scale(1.1);
   box-shadow: 0 6px 12px rgba(39, 174, 96, 0.4);
 }
 
+.chair-seat.available-color:hover {
+  background: darkblue;
+  transform: translateY(-2px) scale(1.1);
+  box-shadow: 0 6px 12px rgba(39, 174, 96, 0.4);
+}
+
 .chair-seat.occupied {
   background: linear-gradient(145deg, #e74c3c, #c0392b);
+  color: white;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.chair-seat.occupied-color {
+  background: darkorange;
   color: white;
   cursor: not-allowed;
   opacity: 0.7;
@@ -1331,6 +1380,16 @@ export default {
   box-shadow: 0 2px 4px rgba(243, 156, 18, 0.3);
 }
 
+.selected-chair-tag-color {
+  background: blue;
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(243, 156, 18, 0.3);
+}
+
 /* Modal Footer */
 .modal-footer {
   background: linear-gradient(145deg, #ecf0f1, #bdc3c7);
@@ -1356,13 +1415,43 @@ export default {
   color: white;
 }
 
+.cancel-modal-btn-color {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  background: darkorange;
+  color: white;
+}
+
 .cancel-modal-btn:hover {
   background: linear-gradient(145deg, #7f8c8d, #95a5a6);
   transform: translateY(-2px);
 }
 
+.cancel-modal-btn-color:hover {
+  background: orange;
+  transform: translateY(-2px);
+}
+
 .confirm-btn {
   background: linear-gradient(145deg, #27ae60, #2ecc71);
+  color: white;
+  flex: 1;
+}
+
+.confirm-btn-color {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  background: blue;
   color: white;
   flex: 1;
 }
@@ -1374,6 +1463,20 @@ export default {
 }
 
 .confirm-btn:disabled {
+  background: linear-gradient(145deg, #95a5a6, #bdc3c7);
+  color: #7f8c8d;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.confirm-btn-color:hover {
+  background: darkblue;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+.confirm-btn-color:disabled {
   background: linear-gradient(145deg, #95a5a6, #bdc3c7);
   color: #7f8c8d;
   cursor: not-allowed;
@@ -1462,5 +1565,4 @@ export default {
   color: white;
   border-color: #007bff;
 }
-
 </style>

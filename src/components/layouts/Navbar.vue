@@ -41,8 +41,8 @@
         </ul>
       </div>
 
-      <img v-if="this.lightsOn" class="light_switch" src="/images/açık_ışık.png" @click="toggle_lights()">
-      <img v-if="!this.lightsOn" class="light_switch" src="/images/kapalı_ışık.png" @click="toggle_lights()">
+      <img v-if="!this.lightsOff" class="light_switch" src="/images/açık_ışık.png" @click="toggle_lights()">
+      <img v-if="this.lightsOff" class="light_switch" src="/images/kapalı_ışık.png" @click="toggle_lights()">
       <img v-if="!this.colorBlind" class="colorblind_button" src="/images/color_blind_off.png" @click="toggle_colors()">
       <img v-if="this.colorBlind" class="colorblind_button" src="/images/color_blind_on.png" @click="toggle_colors()">
     </div>
@@ -57,8 +57,8 @@ export default {
     };
   },
   computed: {
-    lightsOn() {
-      return this.$store.state.lightsOn;
+    lightsOff() {
+      return this.$store.state.lightsOff;
     },
     colorBlind() {
       return this.$store.state.colorBlindness;
@@ -83,7 +83,7 @@ export default {
     },
     toggle_lights() {
       this.$store.commit('toggleLights');
-      alert(this.lightsOn ? "Işıklar açıldı!" : "Işıklar kapandı!");
+      alert(!this.lightsOff ? "Işıklar açıldı!" : "Işıklar kapandı!");
     },
     toggle_colors() {
       this.$store.commit('toggleColorBlindness');

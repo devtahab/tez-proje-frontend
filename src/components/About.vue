@@ -1,5 +1,5 @@
 <template>
-  <div class="about-page">
+  <div :class="lightsOff ? 'about-page-lightsoff' : 'about-page'">
     <div class="about-container">
       <div class="about-content">
         <h1 class="about-title">Hakkımızda</h1>
@@ -139,6 +139,14 @@
 <script>
 export default {
   name: 'AboutPage',
+  data(){
+    return {}
+  },
+  computed: {
+    lightsOff() {
+      return this.$store.state.lightsOff;
+    }
+  },
   mounted() {
     // URL'de # ile belirtilen bir bölüm varsa o bölüme scroll yap
     if (window.location.hash) {
@@ -169,8 +177,15 @@ export default {
 </script>
 
 <style scoped>
+
 .about-page {
   background-color: #f8f9fa;
+  min-height: 100vh;
+  padding: 40px 0;
+}
+
+.about-page-lightsoff {
+  background-color: #343a40;
   min-height: 100vh;
   padding: 40px 0;
 }

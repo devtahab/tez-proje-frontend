@@ -1,7 +1,7 @@
 <template>
-  <div class="login-page">
+  <div :class="lightsOff ? 'login-page-lightsoff' : 'login-page'">
     <div class="container">
-      <h1 class="page-title">Giriş Yap</h1>
+      <h1 :class="lightsOff ? 'page-title-lightsoff' : 'page-title'">Giriş Yap</h1>
       
       <div class="form-container">
         <form @submit.prevent="login" class="login-form">
@@ -14,7 +14,7 @@
               class="form-input" 
               required
             />
-            <div class="form-error" v-if="errors.email">{{ errors.email }}</div>
+            <div :class="colorBlind ? 'form-error-color' : 'form-error'" v-if="errors.email">{{ errors.email }}</div>
           </div>
           
           <div class="form-group">
@@ -26,7 +26,7 @@
               class="form-input" 
               required
             />
-            <div class="form-error" v-if="errors.password">{{ errors.password }}</div>
+            <div :class="colorBlind ? 'form-error-color' : 'form-error'" v-if="errors.password">{{ errors.password }}</div>
           </div>
           
           <div class="forgot-password">
@@ -44,11 +44,11 @@
             <router-link to="/kayit-ol" class="signup-link">Kayıt Ol</router-link>
           </div>
           
-          <div v-if="successMessage" class="success-message">
+          <div v-if="successMessage" :class="colorBlind ? 'success-message-color' : 'success-message'">
             {{ successMessage }}
           </div>
 
-          <div v-if="failMessage" class="fail-message">
+          <div v-if="failMessage" :class="colorBlind ? 'fail-message-color' : 'fail-message'">
             {{ failMessage }}
           </div>
 
@@ -75,6 +75,14 @@ export default {
       isSubmitting: false,
       successMessage: '',
       failMessage: ''
+    }
+  },
+  computed: {
+    colorBlind() {
+      return this.$store.state.colorBlindness;
+    },
+    lightsOff() {
+      return this.$store.state.lightsOff;
     }
   },
   methods: {
@@ -157,6 +165,12 @@ export default {
   padding: 2rem 0;
 }
 
+.login-page-lightsoff {
+  background-color: #343a40;
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -166,6 +180,13 @@ export default {
 .page-title {
   text-align: center;
   color: #1F2937;
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+}
+
+.page-title-lightsoff {
+  text-align: center;
+  color: white;
   margin-bottom: 2rem;
   font-size: 2.5rem;
 }
@@ -211,6 +232,12 @@ label {
 
 .form-error {
   color: #EF4444;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.form-error-color {
+  color: darkorange;
   font-size: 0.875rem;
   margin-top: 0.5rem;
 }
@@ -284,9 +311,27 @@ label {
   text-align: center;
 }
 
+.success-message-color {
+  background-color: blue;
+  color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  text-align: center;
+}
+
 .fail-message {
   background-color: #ff0000;
   color: #ffffff;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.fail-message-color {
+  background-color: darkorange;
+  color: white;
   padding: 1rem;
   border-radius: 8px;
   margin-top: 1rem;

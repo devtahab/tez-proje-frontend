@@ -1,9 +1,9 @@
 <template>
-  <div class="reservation-page">
-    <h1 class="reservation-title">📌 Aktif Rezervasyonlarım</h1>
+  <div :class="lightsOff ? 'reservation-page-lightsoff' : 'reservation-page'">
+    <h1 :class="lightsOff ? 'reservation-title-lightsoff' : 'reservation-title'">📌 Aktif Rezervasyonlarım</h1>
 
-    <div v-if="loading" class="loading">Yükleniyor...</div>
-    <div v-else-if="reservations.length === 0" class="empty">Aktif rezervasyonunuz bulunmamaktadır.</div>
+    <div v-if="loading" :class="lightsOff ? 'loading-lightsoff' : 'loading'">Yükleniyor...</div>
+    <div v-else-if="reservations.length === 0" :class="lightsOff ? 'empty-lightsoff' : 'empty'">Aktif rezervasyonunuz bulunmamaktadır.</div>
 
     <div class="reservation-list" v-else>
       <div class="reservation-card" v-for="reservation in reservations" :key="reservation.id">
@@ -16,7 +16,7 @@
         </div>
 
         <!-- Rezervasyon İptal Butonu -->
-        <button class="cancel-btn" @click="cancelReservation(reservation.id)">Rezervasyonu İptal Et</button>
+        <button :class="colorBlind ? 'cancel-btn-color' : 'cancel-btn'" @click="cancelReservation(reservation.id)">Rezervasyonu İptal Et</button>
       </div>
     </div>
   </div>
@@ -33,6 +33,14 @@ export default {
       reservations: [],
       loading: true,
     };
+  },
+  computed: {
+    colorBlind() {
+      return this.$store.state.colorBlindness;
+    },
+    lightsOff() {
+      return this.$store.state.lightsOff;
+    }
   },
   async created() {
     if(!this.$store.state.token){
@@ -93,10 +101,24 @@ export default {
   min-height: 100vh;
 }
 
+.reservation-page-lightsoff {
+  padding: 2rem;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #343a40;
+  min-height: 100vh;
+}
+
 .reservation-title {
   text-align: center;
   font-size: 2rem;
   color: #333;
+  margin-bottom: 2rem;
+}
+
+.reservation-title-lightsoff {
+  text-align: center;
+  font-size: 2rem;
+  color: white;
   margin-bottom: 2rem;
 }
 
@@ -105,6 +127,13 @@ export default {
   text-align: center;
   font-size: 1.1rem;
   color: #666;
+}
+
+.loading-lightsoff,
+.empty-lightsoff {
+  text-align: center;
+  font-size: 1.1rem;
+  color: white;
 }
 
 .reservation-list {
@@ -146,7 +175,20 @@ export default {
   cursor: pointer;
 }
 
+.cancel-btn-color {
+  background-color: darkorange;
+  border: none;
+  padding: 0.5rem 1rem;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 .cancel-btn:hover {
   background-color: #c82333;
+}
+
+.cancel-btn-color:hover {
+  background-color: orange;
 }
 </style>
