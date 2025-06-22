@@ -79,6 +79,7 @@
               <circle cx="40" cy="65" r="4" fill="#4A4A4A"/>
               <circle cx="15" cy="40" r="4" fill="#4A4A4A"/>
             </svg>
+            <img src="/images/engelli-logo.png" class="accessibility-icon" alt="Engelli Masa" />
             <div class="table-label">9</div>
           </div>
           
@@ -96,6 +97,7 @@
               <circle cx="40" cy="65" r="4" fill="#4A4A4A"/>
               <circle cx="15" cy="40" r="4" fill="#4A4A4A"/>
             </svg>
+            <img src="/images/engelli-logo.png" class="accessibility-icon" alt="Engelli Masa" />
             <div class="table-label">10</div>
           </div>
           
@@ -113,6 +115,7 @@
               <circle cx="40" cy="65" r="4" fill="#4A4A4A"/>
               <circle cx="15" cy="40" r="4" fill="#4A4A4A"/>
             </svg>
+            <img src="/images/engelli-logo.png" class="accessibility-icon" alt="Engelli Masa" />
             <div class="table-label">11</div>
           </div>
         </div>
@@ -365,6 +368,7 @@
               <circle cx="40" cy="65" r="4" fill="#4A4A4A"/>
               <circle cx="15" cy="40" r="4" fill="#4A4A4A"/>
             </svg>
+            <img src="/images/engelli-logo.png" class="accessibility-icon" alt="Engelli Masa" />
             <div class="table-label">12</div>
           </div>
           
@@ -382,6 +386,7 @@
               <circle cx="40" cy="65" r="4" fill="#4A4A4A"/>
               <circle cx="15" cy="40" r="4" fill="#4A4A4A"/>
             </svg>
+            <img src="/images/engelli-logo.png" class="accessibility-icon" alt="Engelli Masa" />
             <div class="table-label">13</div>
           </div>
           
@@ -399,6 +404,7 @@
               <circle cx="40" cy="65" r="4" fill="#4A4A4A"/>
               <circle cx="15" cy="40" r="4" fill="#4A4A4A"/>
             </svg>
+            <img src="/images/engelli-logo.png" class="accessibility-icon" alt="Engelli Masa" />
             <div class="table-label">14</div>
           </div>
         </div>
@@ -473,6 +479,12 @@
                 <div 
                   v-for="i in 3" 
                   class="chair-seat"
+                  :class="{ 
+                    'occupied': seats[i - 1].isReserved === true,
+                    'selected': selectedChair === (tableNum * 8) + i,
+                    'available': seats[i - 1].isReserved === false
+                  }"
+                  @click="toggleChair((tableNum * 8) + i)"
                   >
                   {{ (tableNum * 8) + i }}
                 </div>
@@ -484,7 +496,14 @@
                 <div class="chair-column left-column">
                   <div 
                     v-for="i in 1" 
-                    class="chair-seat">
+                    class="chair-seat"
+                    :class="{ 
+                    'occupied': seats[i - 1].isReserved === true,
+                    'selected': selectedChair === (tableNum * 8) + i + 3,
+                    'available': seats[i - 1].isReserved === false
+                    }"
+                    @click="toggleChair((tableNum * 8) + i + 3)"
+                    >
                     {{ (tableNum * 8) + i + 3 }}
                   </div>
                 </div>
@@ -500,7 +519,14 @@
                 <div class="chair-column right-column">
                   <div 
                     v-for="i in 1" 
-                    class="chair-seat">
+                    class="chair-seat"
+                    :class="{ 
+                    'occupied': seats[i - 1].isReserved === true,
+                    'selected': selectedChair === (tableNum * 8) + i + 4,
+                    'available': seats[i - 1].isReserved === false
+                    }"
+                    @click="toggleChair((tableNum * 8) + i + 4)"
+                    >
                     {{ (tableNum * 8) + i + 4 }}
                   </div>
                 </div>
@@ -510,7 +536,14 @@
               <div class="chair-row bottom-row">
                 <div 
                   v-for="i in 3" 
-                  class="chair-seat">
+                  class="chair-seat"
+                  :class="{ 
+                    'occupied': seats[i - 1].isReserved === true,
+                    'selected': selectedChair === (tableNum * 8) + i + 5,
+                    'available': seats[i - 1].isReserved === false
+                  }"
+                  @click="toggleChair((tableNum * 8) + i + 5)"
+                  >
                   {{ (tableNum * 8) + i + 5 }}
                 </div>
               </div>
@@ -524,30 +557,22 @@
                 <div 
                   v-for="i in 4" 
                   class="chair-seat round-chair"
-                  :style="getChairPosition(i - 1)">
+                  :class="{ 
+                    'occupied': seats[i - 1].isReserved === true,
+                    'selected': selectedChair === (tableNum * 8) - (4 * (tableNum - 8)) + i,
+                    'available': seats[i - 1].isReserved === false
+                  }"
+                  :style="getChairPosition(i - 1)"
+                  @click="toggleChair((tableNum * 8) - (4 * (tableNum - 8)) + i)"
+                  >
                   {{ (tableNum * 8) - (4 * (tableNum - 8)) + i }}
                 </div>
               </div>
             </div>
           </div>
           
-          <div class="chair-legend">
-            <div class="legend-item">
-              <div class="legend-chair available"></div>
-              <span>Boş (0)</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-chair occupied"></div>
-              <span>Dolu (0)</span>
-            </div>
-            <div class="legend-item">
-              <div class="legend-chair selected"></div>
-              <span>Seçilen (0)</span>
-            </div>
-          </div>
-          
           <div class="selected-chair-info" v-if="selectedChair">
-            <h4>✅ Seçilen Sandalye:</h4>
+            <h4 class="weird-header">Seçilen Sandalye:</h4>
             <div class="selected-list">
               <span class="selected-chair-tag"> {{ selectedChair }}</span>
             </div>
@@ -566,6 +591,40 @@
         </div>
       </div>
     </div>
+
+    <div class="modal-overlay" v-if="showDurationModal" @click="showDurationModal = false">
+      <div class="modal-content" @click.stop>
+        <div class="modal-header">
+          <h3>⏱ Süre Seçimi</h3>
+          <button class="close-btn" @click="showDurationModal = false">✕</button>
+        </div>
+        <div class="modal-body">
+          <p>Lütfen rezervasyon süresini seçin:</p>
+          <div class="duration-options">
+            <button 
+              v-for="hour in [1, 2, 3, 4, 5]" 
+              :key="hour" 
+              @click="selectedDuration = hour"
+              :class="{ 'selected-duration': selectedDuration === hour }"
+            >
+              {{ hour }} saat
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="cancel-modal-btn" @click="showDurationModal = false">İptal</button>
+          <button 
+            class="confirm-btn" 
+            :disabled="!selectedDuration" 
+            @click="finalizeReservation"
+          >
+            Onayla
+          </button>
+        </div>
+      </div>
+    </div>
+
+
   </div>
 </template>
 
@@ -578,10 +637,13 @@ export default {
   data() {
     return {
       selectedTableName: '',
+      tableNum: 0,
       showModal: false,
       selectedChair: null,
       chairStatus: null, // 'available', 'occupied'
-      seats: []
+      seats: [],
+      showDurationModal: false,     // Süre seçimi modalı
+      selectedDuration: null        // Seçilen süre
     }
   },
   computed: {
@@ -602,28 +664,15 @@ export default {
     },
     openModal() {
       this.showModal = true;
-      this.initializeChairs();
     },
     closeModal() {
       this.showModal = false;
       this.selectedChair = null;
       this.clearSelection();
     },
-    initializeChairs() {
-      const chairCount = this.getTableCapacity();
-      
-      // Debug için konsola yazdır
-      console.log(`${this.selectedTableName} için ${chairCount} sandalye initialize edildi:`, this.chairStatus);
-    },
-    toggleChair(chairIndex) {
-      if (this.chairStatus[chairIndex] === 'occupied') return;
-      
-      const index = this.selectedChairs.indexOf(chairIndex);
-      if (index > -1) {
-        this.selectedChairs.splice(index, 1);
-      } else {
-        this.selectedChairs.push(chairIndex);
-      }
+    toggleChair(seatNumber) {
+      if (this.seats[seatNumber - 1].isReserved === true) return;
+      this.selectedChair = seatNumber;
     },
     getChairPosition(index) {
       const angle = (index * 90) * (Math.PI / 180); // 4 sandalye = 360°/4 = 90°
@@ -642,10 +691,32 @@ export default {
     },
     confirmReservation() {
       if (this.selectedChair === null) return;
+      // console.log(this.seats[this.selectedChair - 1]);
+      this.showDurationModal = true;
+    },
+    async finalizeReservation(){
+      if (!this.selectedDuration) return;
+      let seat = this.seats[this.selectedChair - 1];
 
-      alert(`✅ ${this.selectedTableName} için ${this.selectedChair} numaralı sandalye rezerve edildi!`);
-      
-      this.closeModal();
+      console.log(jwtDecode(this.$store.state.token).Id);
+      console.log(seat.id);
+      console.log(this.selectedDuration);
+
+      let response = await axios.post("http://35.158.197.224/api/reservation/reserve-seat-with-transaction", {
+        appUserId: jwtDecode(this.$store.state.token).Id,
+        seatId: seat.id,
+        duration: this.selectedDuration
+      })
+
+      console.log(response);
+
+      alert(`✅ ${this.selectedTableName} için ${this.selectedChair} numaralı sandalye ${this.selectedDuration} saatliğine rezerve edildi!`);
+
+      // Kapat ve sıfırla
+      this.showDurationModal = false;
+      this.showModal = false;
+      this.selectedChair = null;
+      this.selectedDuration = null;
       this.clearSelection();
     },
     getTableCapacity() {
@@ -661,8 +732,9 @@ export default {
     },
     async getSeats(){
       let response = await axios.get("http://35.158.197.224/api/seat/get-seat-list");
+      let sortedSeats = response.data.data.sort((a, b) => parseInt(a.seatNumber) - parseInt(b.seatNumber));
       console.log(response.data.data);
-      this.seats = response.data.data;
+      this.seats = sortedSeats;
       console.log(this.seats);
     }
   },
@@ -818,8 +890,8 @@ export default {
 }
 
 .round-table {
-  width: 90px;
-  height: 90px;
+  width: 100px;
+  height: 100px;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
@@ -860,8 +932,23 @@ export default {
 }
 
 .round-icon {
-  width: 70px;
-  height: 70px;
+  width: 90px;
+  height: 90px;
+}
+
+.accessibility-icon {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  color: white;
+  background-color: transparent;
+  border-radius: 50%;
+  padding: 4px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
 }
 
 .table-label {
@@ -1144,11 +1231,9 @@ export default {
 }
 
 .chair-seat.selected {
-  background: linear-gradient(145deg, #f39c12, #e67e22);
   color: white;
-  border-color: #d35400;
+  outline: 3px solid black;
   transform: translateY(-2px) scale(1.1);
-  box-shadow: 0 6px 12px rgba(243, 156, 18, 0.4);
 }
 
 .round-chair {
@@ -1204,6 +1289,10 @@ export default {
   color: #2c3e50;
 }
 
+.weird-header{
+  color: black;
+}
+
 .selected-list {
   display: flex;
   flex-wrap: wrap;
@@ -1211,7 +1300,7 @@ export default {
 }
 
 .selected-chair-tag {
-  background: linear-gradient(145deg, #f39c12, #e67e22);
+  background: linear-gradient(145deg, #27ae60, #2ecc71);
   color: white;
   padding: 0.3rem 0.8rem;
   border-radius: 15px;
@@ -1241,8 +1330,8 @@ export default {
 }
 
 .cancel-modal-btn {
-  background: linear-gradient(145deg, #95a5a6, #bdc3c7);
-  color: #2c3e50;
+  background: red;
+  color: white;
 }
 
 .cancel-modal-btn:hover {
@@ -1324,4 +1413,32 @@ export default {
   font-weight: bold;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
+
+.duration-options {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.duration-options button {
+  padding: 10px 16px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.duration-options button:hover {
+  border-color: #007bff;
+}
+
+.duration-options .selected-duration {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
 </style>

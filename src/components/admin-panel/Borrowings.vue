@@ -74,51 +74,31 @@ export default {
     }
   },
   methods: {
-async returnBook(borrowing) {
-  try {
-    const token = this.$store.state.token;
-    if (!token) {
-      alert('Giriş yapmanız gerekiyor!');
-      this.$router.push('/giris-yap');
-      return;
-    }
-    
-    const decoded = jwtDecode(token);
-    const adminId = decoded.Id;
-    if (!adminId) {
-      alert('Token geçersiz veya kullanıcı bilgisi yok');
-      this.$router.push('/giris-yap');
-      return;
-    }
+    async returnBook(borrowing) {
+      try {
+        console.log(borrowing);
+        console.log(borrowing.userId);
+        console.log(borrowing.bookId);
+        console.log(jwtDecode(this.$store.state.token).Id);
+        const confirmed = confirm("Bu kitabı iade etmek istediğinize emin misiniz?");
+        if (!confirmed) return;
 
-    const confirmed = confirm("Bu kitabı iade etmek istediğinize emin misiniz?");
-    if (!confirmed) return;
+        let response = await axios.post('http://35.158.197.224/api/borrowing/completeborrowing', {
+          appUserId: borrowing.userId,
+          adminId: jwtDecode(this.$store.state.token).Id,
+          bookId: borrowing.bookId
+        }
+        );
 
-    const payload = {
-      request: {
-        appUserId: borrowing.userId,
-        adminId: adminId,
-        bookId: borrowing.bookId
+        console.log(response.data);
+
+        alert("Kitap başarıyla iade edildi.");
+        this.$router.go(0);
+      } catch (err) {
+        console.error("İade sırasında hata:", err);
+        alert("İade işlemi başarısız oldu.");
       }
-    };
-
-    console.log('Gönderilen payload:', payload);
-
-    const response = await axios.post(
-      'http://35.158.197.224/api/borrowing/completeborrowing',
-      payload,
-      { headers: { 'Content-Type': 'application/json' } }
-    );
-
-    console.log('Response:', response.data);
-    alert("Kitap başarıyla iade edildi.");
-    this.$router.go(0);
-
-  } catch (err) {
-    console.error("İade sırasında hata:", err);
-    alert("İade işlemi başarısız oldu.");
-  }
-},
+    },
     nextPage() {
       if (this.currentPage < this.totalPages) this.currentPage++;
     },
