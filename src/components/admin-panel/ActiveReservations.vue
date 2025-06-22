@@ -1,9 +1,9 @@
 <template>
   <div class="reservation-page">
-    <h1 class="reservation-title">📌 Aktif Rezervasyonlarım</h1>
+    <h1 class="reservation-title">📌 Tüm Aktif Rezervasyonlar</h1>
 
     <div v-if="loading" class="loading">Yükleniyor...</div>
-    <div v-else-if="reservations.length === 0" class="empty">Aktif rezervasyonunuz bulunmamaktadır.</div>
+    <div v-else-if="reservations.length === 0" class="empty">Aktif rezervasyon bulunmamaktadır.</div>
 
     <div class="reservation-list" v-else>
       <div class="reservation-card" v-for="reservation in reservations" :key="reservation.id">
@@ -49,14 +49,12 @@ export default {
     try {
       let userId = jwtDecode(this.$store.state.token).Id;
 
-      let response = await axios.get(`http://35.158.197.224/api/reservation/get-reservations-by-user`, {
-        headers: { appUserId: userId }
-      });
+      let response = await axios.get(`http://35.158.197.224/api/reservation/get-active-reservations`);
 
       console.log(response.data.data);
 
       // Sadece aktif rezervasyonları filtrele
-      this.reservations = response.data.data.filter(r => r.isActive === true);
+      this.reservations = response.data.data;
     } catch (err) {
       console.error("Rezervasyonlar alınamadı:", err);
     } finally {
@@ -67,14 +65,16 @@ export default {
     formatDateTimeUTC(dateStr) {
     const d = new Date(dateStr);
     return d.toLocaleString('tr-TR', {
-        dateStyle: 'short',
-        timeStyle: 'short',
-        timeZone: 'UTC'
+      dateStyle: 'short',
+      timeStyle: 'short',
+      timeZone: 'Europe/Istanbul'
     });
-    }
+  }
     ,
     async cancelReservation(reservationId) {
       try {
+        console.log(jwtDecode(this.$store.state.token).Id);
+        console.log(reservationId);
         await axios.post(`http://35.158.197.224/api/reservation/end-reservation-early`, {
           appUserId: jwtDecode(this.$store.state.token).Id,
           reservationId: reservationId

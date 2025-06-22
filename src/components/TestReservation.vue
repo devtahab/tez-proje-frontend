@@ -681,13 +681,13 @@ export default {
         this.$router.push('/giris-yap');
         return;
       }
-      
+
       if (this.seats[seatNumber - 1].isReserved === true) return;
 
       let response = await axios.get("http://35.158.197.224/api/auth/get-user-list");
       let user = response.data.data.find(u => u.id === jwtDecode(this.$store.state.token).Id);
-      console.log(user);
-      if(this.seats[seatNumber - 1].isMalformed !== user.isMalformed){
+      console.log(user); 
+      if(this.seats[seatNumber - 1].isMalformed === true && user.isMalformed === false){
         alert("Bu masa sadece engelli kullanıcılarımız içindir!");
         return;
       }
@@ -726,8 +726,7 @@ export default {
       let response = await axios.post("http://35.158.197.224/api/reservation/reserve-seat-with-transaction", {
         appUserId: jwtDecode(this.$store.state.token).Id,
         seatId: seat.id,
-        // duration: this.selectedDuration * 60
-        duration: 2
+        duration: this.selectedDuration * 60
       })
 
       console.log(response);

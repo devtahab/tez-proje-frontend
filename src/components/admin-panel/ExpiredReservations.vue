@@ -91,10 +91,10 @@ export default {
   methods: {
     formatDateTimeUTC(dateStr) {
       const d = new Date(dateStr);
-      d.setHours(d.getHours() - 3); // Türkiye saatine düzeltme
       return d.toLocaleString('tr-TR', {
         dateStyle: 'short',
         timeStyle: 'short',
+        timeZone: 'Europe/Istanbul'
       });
     }
   }

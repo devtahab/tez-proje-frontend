@@ -62,11 +62,11 @@ export default {
     formatDateTimeUTC(dateStr) {
     const d = new Date(dateStr);
     return d.toLocaleString('tr-TR', {
-        dateStyle: 'short',
-        timeStyle: 'short',
-        timeZone: 'UTC'
+      dateStyle: 'short',
+      timeStyle: 'short',
+      timeZone: 'Europe/Istanbul'
     });
-    }
+  }
     ,
     async cancelReservation(reservationId) {
       try {

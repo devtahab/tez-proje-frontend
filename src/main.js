@@ -26,6 +26,7 @@ import Reservations from './components/user-panel/Reservations.vue'
 import AdminBorrowings from './components/admin-panel/Borrowings.vue'
 import ExpiredReservations from './components/admin-panel/ExpiredReservations.vue'
 import Users from './components/admin-panel/Users.vue'
+import ActiveReservations from './components/admin-panel/ActiveReservations.vue'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,7 +45,8 @@ const router = createRouter({
         { path: '/aktif-odunc-alinan-kitaplar', component: AdminBorrowings },
         { path: '/rezervasyonlarim', component: Reservations },
         { path: '/expired-reservations', component: ExpiredReservations },
-        { path: '/users', component: Users}
+        { path: '/users', component: Users},
+        { path: '/active-reservations', component: ActiveReservations}
     ]
 })
 
