@@ -23,7 +23,7 @@
         </button>
         <ul v-show="showDropdown" class="dropdown-menu">
           <li><a href="/odunc-kitaplar">Ödünç Kitaplarım</a></li>
-          <li><a href="#">Rezervasyonlarım</a></li>
+          <li><a href="/rezervasyonlarim">Rezervasyonlarım</a></li>
           <li><a href="#" @click="logout">Çıkış Yap</a></li>
         </ul>
       </div>
@@ -35,7 +35,8 @@
         <ul v-show="showDropdown" class="dropdown-menu">
           <li><a href="/aktif-odunc-alinan-kitaplar">Ödünç Alınan Kitaplar</a></li>
           <li><a href="#">Aktif Rezervasyonlar</a></li>
-          <li><a href="#">Geçmiş Rezervasyonlar</a></li>
+          <li><a href="/expired-reservations">Geçmiş Rezervasyonlar</a></li>
+          <li><a href="/users">Kullanıcılar</a></li>
           <li><a href="#" @click="logout">Çıkış Yap</a></li>
         </ul>
       </div>

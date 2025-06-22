@@ -478,11 +478,12 @@
               <div class="chair-row top-row">
                 <div 
                   v-for="i in 3" 
+                  :key="'top-' + i"
                   class="chair-seat"
                   :class="{ 
-                    'occupied': seats[i - 1].isReserved === true,
+                    'occupied': seats[(tableNum * 8) + i - 1].isReserved === true,
                     'selected': selectedChair === (tableNum * 8) + i,
-                    'available': seats[i - 1].isReserved === false
+                    'available': seats[(tableNum * 8) + i - 1].isReserved === false
                   }"
                   @click="toggleChair((tableNum * 8) + i)"
                   >
@@ -496,11 +497,12 @@
                 <div class="chair-column left-column">
                   <div 
                     v-for="i in 1" 
+                    :key="'left-' + i"
                     class="chair-seat"
                     :class="{ 
-                    'occupied': seats[i - 1].isReserved === true,
+                    'occupied': seats[(tableNum * 8) + i + 3 - 1].isReserved === true,
                     'selected': selectedChair === (tableNum * 8) + i + 3,
-                    'available': seats[i - 1].isReserved === false
+                    'available': seats[(tableNum * 8) + i + 3 - 1].isReserved === false
                     }"
                     @click="toggleChair((tableNum * 8) + i + 3)"
                     >
@@ -519,11 +521,12 @@
                 <div class="chair-column right-column">
                   <div 
                     v-for="i in 1" 
+                    :key="'right-' + i"
                     class="chair-seat"
                     :class="{ 
-                    'occupied': seats[i - 1].isReserved === true,
+                    'occupied': seats[(tableNum * 8) + i + 4 - 1].isReserved === true,
                     'selected': selectedChair === (tableNum * 8) + i + 4,
-                    'available': seats[i - 1].isReserved === false
+                    'available': seats[(tableNum * 8) + i + 4 - 1].isReserved === false
                     }"
                     @click="toggleChair((tableNum * 8) + i + 4)"
                     >
@@ -536,11 +539,12 @@
               <div class="chair-row bottom-row">
                 <div 
                   v-for="i in 3" 
+                  :key="'bottom-' + i"
                   class="chair-seat"
                   :class="{ 
-                    'occupied': seats[i - 1].isReserved === true,
+                    'occupied': seats[(tableNum * 8) + i + 5 - 1].isReserved === true,
                     'selected': selectedChair === (tableNum * 8) + i + 5,
-                    'available': seats[i - 1].isReserved === false
+                    'available': seats[(tableNum * 8) + i + 5 - 1].isReserved === false
                   }"
                   @click="toggleChair((tableNum * 8) + i + 5)"
                   >
@@ -556,11 +560,12 @@
                 <!-- Sandalyeler Çember Halinde (1-10) -->
                 <div 
                   v-for="i in 4" 
+                  :key="'round-' + i"
                   class="chair-seat round-chair"
                   :class="{ 
-                    'occupied': seats[i - 1].isReserved === true,
+                    'occupied': seats[(tableNum * 8) - (4 * (tableNum - 8)) + i - 1].isReserved === true,
                     'selected': selectedChair === (tableNum * 8) - (4 * (tableNum - 8)) + i,
-                    'available': seats[i - 1].isReserved === false
+                    'available': seats[(tableNum * 8) - (4 * (tableNum - 8)) + i - 1].isReserved === false
                   }"
                   :style="getChairPosition(i - 1)"
                   @click="toggleChair((tableNum * 8) - (4 * (tableNum - 8)) + i)"
@@ -705,7 +710,7 @@ export default {
       let response = await axios.post("http://35.158.197.224/api/reservation/reserve-seat-with-transaction", {
         appUserId: jwtDecode(this.$store.state.token).Id,
         seatId: seat.id,
-        duration: this.selectedDuration
+        duration: this.selectedDuration * 60
       })
 
       console.log(response);
@@ -718,6 +723,7 @@ export default {
       this.selectedChair = null;
       this.selectedDuration = null;
       this.clearSelection();
+      this.$router.go(0);
     },
     getTableCapacity() {
       // Dikdörtgen masalar 8 kişilik, yuvarlak masalar 4 kişilik
