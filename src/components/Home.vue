@@ -52,7 +52,7 @@
           </svg>
         </div>
         <div class="stat-info">
-          <div class="stat-value">42</div>
+          <div class="stat-value">{{ emptySeats }}</div>
           <div class="stat-label">Boş Koltuk</div>
         </div>
       </div>
@@ -65,23 +65,11 @@
           </svg>
         </div>
         <div class="stat-info">
-          <div class="stat-value">28</div>
+          <div class="stat-value">{{ fullSeats }}</div>
           <div class="stat-label">İçeridekiler</div>
         </div>
       </div>
-      
-      <div class="stat-card">
-        <div class="stat-icon reservation-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-            <!-- Font Awesome Calendar Check icon -->
-            <path d="M128 0c13.3 0 24 10.7 24 24V64H296V24c0-13.3 10.7-24 24-24s24 10.7 24 24V64h40c35.3 0 64 28.7 64 64v16 48V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V192 144 128c0-35.3 28.7-64 64-64h40V24c0-13.3 10.7-24 24-24zM400 192H48V448c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V192zM329 297L217 409c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47 95-95c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/>
-          </svg>
-        </div>
-        <div class="stat-info">
-          <div class="stat-value">15</div>
-          <div class="stat-label">Rezervasyon</div>
-        </div>
-      </div>
+
     </div>
 
     <!-- Dalga SVG - Video'nun altında -->
@@ -101,14 +89,27 @@
 </template>
 
 <script>
+import axios from 'axios';
 import videoSource from '../assets/library_medium.mp4';
 
 export default {
   data() {
     return {
       videoLoaded: false,
-      videoSrc: videoSource
+      videoSrc: videoSource,
+      emptySeats: 0,
+      fullSeats: 0
     };
+  },
+  methods: {
+    async getSeats(){
+      let response = await axios.get('http://35.158.197.224/api/seat/get-seat-list');
+
+      let seats = response.data.data;
+
+      this.fullSeats = seats.filter(seat => seat.isReserved).length;
+      this.emptySeats = seats.filter(seat => !seat.isReserved).length;
+    }
   },
   mounted() {
     const video = this.$refs.videoPlayer;
@@ -131,6 +132,8 @@ export default {
         document.querySelector('.home-page').classList.add('use-background');
       });
     }
+
+    this.getSeats();
   }
 };
 </script>

@@ -7,16 +7,38 @@
 
     <div class="reservation-list" v-else>
       <div class="reservation-card" v-for="reservation in reservations" :key="reservation.id">
-        <!-- Masa / Sandalye Bilgisi -->
+        <!-- Masa ve zaman bilgileri -->
         <div class="seat-info">Masa Sandalye No: <span>{{ reservation.seat.seatNumber }}</span></div>
-        
-        <!-- Başlangıç / Bitiş Zamanı -->
         <div class="time-info">
           {{ formatDateTimeUTC(reservation.startTime) }} - {{ formatDateTimeUTC(reservation.endTime) }}
         </div>
 
-        <!-- Rezervasyon İptal Butonu -->
-        <button :class="colorBlind ? 'cancel-btn-color' : 'cancel-btn'" @click="cancelReservation(reservation.id)">Rezervasyonu İptal Et</button>
+        <!-- Butonlar -->
+        <button
+          :class="colorBlind ? 'cancel-btn-color' : 'cancel-btn'"
+          @click="cancelReservation(reservation.id)"
+        >
+          Rezervasyonu İptal Et
+        </button>
+
+        <!-- Check-in kontrolü -->
+        <div v-if="reservation.checkIn" :class="colorBlind ? 'checkin-info-lightsoff' : 'checkin-info'">
+             Check-in yapıldı
+        </div>
+
+        <!-- QR Oluştur butonu -->
+        <button
+          v-else
+          :class="colorBlind ? 'qr-btn-color' : 'qr-btn'"
+          @click="generateQr(reservation.id)"
+        >
+          Qr Oluştur
+        </button>
+
+        <!-- QR kodu gösterimi (check-in olmayanlar için) -->
+        <div v-if="qrCodes[reservation.id] && !reservation.checkIn" class="qr-code-wrapper">
+          <img :src="qrCodes[reservation.id]" alt="QR Kodu" />
+        </div>
       </div>
     </div>
   </div>
@@ -32,6 +54,7 @@ export default {
     return {
       reservations: [],
       loading: true,
+      qrCodes: {} // Her reservationId için QR base64 saklanacak
     };
   },
   computed: {
@@ -74,12 +97,11 @@ export default {
       timeStyle: 'short',
       timeZone: 'Europe/Istanbul'
     });
-  }
-    ,
+  },
     async cancelReservation(reservationId) {
       try {
         await axios.post(`http://35.158.197.224/api/reservation/end-reservation-early`, {
-          appUserId: jwtDecode(this.$store.state.token).Id,
+          userId: jwtDecode(this.$store.state.token).Id,
           reservationId: reservationId
         });
         alert("Rezervasyon iptal edildi.");
@@ -87,6 +109,20 @@ export default {
       } catch (err) {
         console.error("Rezervasyon iptal hatası:", err);
         alert("Rezervasyon iptal edilemedi.");
+      }
+    },
+    async generateQr(reservationId) {
+      console.log(reservationId);
+      try {
+        const response = await axios.get(`http://35.158.197.224/api/reservation/generate-qr?reservationId=${reservationId}`);
+        console.log(response);
+        // Eğer response.data.base64 olarak geliyorsa:
+        const base64 = response.data.data; // <-- Buradan QR verisi alınıyor
+
+        this.qrCodes[reservationId] = `data:image/png;base64,${base64}`;
+      } catch (err) {
+        console.error("QR kod oluşturulamadı:", err);
+        alert("QR kod oluşturulurken hata oluştu.");
       }
     }
   }
@@ -191,4 +227,60 @@ export default {
 .cancel-btn-color:hover {
   background-color: orange;
 }
+
+.qr-btn {
+  display: block;
+  margin: 10px auto 0;
+  background-color: green;
+  border: none;
+  padding: 0.5rem 1rem;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.qr-btn-color {
+  display: block;
+  margin: 10px auto 0;
+  background-color: blue;
+  border: none;
+  padding: 0.5rem 1rem;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.qr-btn:hover {
+  background-color: rgb(12, 190, 12);
+}
+
+.qr-btn-color:hover {
+  background-color: darkblue;
+}
+
+.qr-code-wrapper {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.qr-code-wrapper img {
+  max-width: 150px;
+  height: auto;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.checkin-info {
+  margin-top: 10px;
+  color: green;
+  font-weight: bold;
+}
+
+.checkin-info-lightsoff {
+  margin-top: 10px;
+  color: blue;
+  font-weight: bold;
+}
+
+
 </style>

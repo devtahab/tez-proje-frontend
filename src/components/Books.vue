@@ -156,12 +156,6 @@
                 </div>
                 
                 <div class="comment-form">
-                  <input 
-                    type="text" 
-                    placeholder="Adınız" 
-                    class="comment-input"
-                    v-model="newComment.userName"
-                  />
                   <div class="comment-rating-input">
                     <span>Puanınız:</span>
                     <div class="comment-stars">
@@ -235,10 +229,9 @@
                     </div>
                   </div>
                   <p class="comment-text">{{ comment.comment }}</p>
-                  <button v-if="comment.appuUserId === userId" :class="colorBlind ? 'comment-delete-btn-color' : 'comment-delete-btn'">Sil <i class="bi bi-trash"></i></button>
+                  <button v-if="comment.appuUserId === userId" :class="colorBlind ? 'comment-delete-btn-color' : 'comment-delete-btn'" @click="deleteComment(comment.id)">Sil <i class="bi bi-trash"></i></button>
                 </div>
-              </div>
-              
+              </div> 
             </div>
           </div>
         </div>
@@ -262,7 +255,6 @@ data() {
       tempRating: 0,
       activeTab: 'info', // 'info' veya 'comments'
       newComment: {
-        userName: '',
         rating: 0,
         text: ''
       },
@@ -314,8 +306,7 @@ computed: {
       return pages;
     },
     canSubmitComment() {
-      return this.newComment.userName.trim() !== '' && 
-             this.newComment.rating > 0 && 
+      return this.newComment.rating > 0 && 
              this.newComment.text.trim() !== '';
     },
     colorBlind() {
@@ -333,7 +324,7 @@ methods: {
     async selectBook(book) {
       try {
         let response = await axios.get(`http://35.158.197.224/api/review/get-average-rating-by-book-id?bookId=${book.id}`);
-        book.rating = response.data.data;
+        book.rating = response.data.data.toFixed(1);
       } catch (error) {
         book.rating = 0;
         console.warn("No rating found for this book");
@@ -398,7 +389,6 @@ methods: {
     },
     resetCommentForm() {
       this.newComment = {
-        userName: '',
         rating: 0,
         text: ''
       };
@@ -455,6 +445,16 @@ methods: {
       else{
         alert("Bir hata oluştu...");
         this.$router.go(0);
+      }
+    },
+    async deleteComment(commentId){
+      try {
+        let response = await axios.delete(`http://35.158.197.224/api/review/delete-review?id=${commentId}`)
+        console.log(response);
+        alert("Yorumunuz silindi");
+        this.$router.go(0);
+      } catch (error) {
+        console.warn("Something went wrong");
       }
     },
     async getBooks(){

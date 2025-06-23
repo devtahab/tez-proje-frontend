@@ -76,7 +76,7 @@ export default {
         console.log(jwtDecode(this.$store.state.token).Id);
         console.log(reservationId);
         await axios.post(`http://35.158.197.224/api/reservation/end-reservation-early`, {
-          appUserId: jwtDecode(this.$store.state.token).Id,
+          userId: jwtDecode(this.$store.state.token).Id,
           reservationId: reservationId
         });
         alert("Rezervasyon iptal edildi.");

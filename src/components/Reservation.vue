@@ -646,6 +646,7 @@
 <script>
   import axios from 'axios';
   import { jwtDecode } from 'jwt-decode';
+  import * as signalR from '@microsoft/signalr';
 
 export default {
   name: 'LibraryReservation',
@@ -707,6 +708,20 @@ export default {
         alert("Bu masa sadece engelli kullanıcılarımız içindir!");
         return;
       }
+
+      let responseTwo = await axios.get(`http://35.158.197.224/api/reservation/get-reservations-by-user`, {
+        headers: {
+          appUserId: user.id
+        }
+      })
+      let resCount = responseTwo.data.data.filter(r => r.isActive).length;
+      if(resCount > 0){
+        alert("Mevcut rezervasyonunuz bulunmaktadır!");
+        this.$router.push('/rezervasyonlarim');
+        return;
+      }
+      console.log(responseTwo.data.data);
+      console.log(resCount);
 
       this.selectedChair = seatNumber;
     },
@@ -778,6 +793,24 @@ export default {
   },
   mounted(){
       this.getSeats();
+
+      const connection = new signalR.HubConnectionBuilder()
+      .withUrl("http://35.158.197.224/seatHub")
+      .withAutomaticReconnect()
+      .build();
+
+      connection.start()
+        .then(() => {
+          console.log("SignalR bağlantısı kuruldu");
+
+          connection.on("SeatListUpdated", () => {
+            console.log("SeatUpdated olayı alındı, koltuklar yenileniyor...");
+            this.getSeats();
+          });
+        })
+        .catch(err => {
+          console.error("SignalR bağlantı hatası:", err);
+        });
   }
 }
 </script>

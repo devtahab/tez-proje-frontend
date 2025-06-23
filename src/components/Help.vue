@@ -1,10 +1,10 @@
 <template>
-  <div class="help-page">
+  <div :class="lightsOff ? 'help-page-lightsoff' : 'help-page'">
     <!-- Renkli Hero Bölümü -->
-    <div class="hero-section">
+    <div :class="lightsOff ? 'hero-section-lightsoff' : 'hero-section'">
       <div class="container">
         <h1 class="page-title">Yardım</h1>
-        <p class="hero-text">Size nasıl yardımcı olabiliriz?</p>
+        <p :class="lightsOff ? 'hero-text-lightsoff' : 'hero-text'">Size nasıl yardımcı olabiliriz?</p>
       </div>
     </div>
     
@@ -118,6 +118,11 @@ export default {
         }
       ]
     };
+  },
+  computed: {
+    lightsOff() {
+      return this.$store.state.lightsOff;
+    }
   }
 };
 </script>
@@ -129,10 +134,26 @@ export default {
   padding: 10px 0 20px;
 }
 
+.help-page-lightsoff {
+  background-color: #343a40;
+  min-height: 80vh;
+  padding: 10px 0 20px;
+}
+
 /* Hero Bölümü */
 .hero-section {
   background: #F7FAFC;
   color: #1f2937;
+  padding: 3rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.hero-section-lightsoff {
+  background: #343a40;
+  color: white;
   padding: 3rem 0;
   text-align: center;
   position: relative;
@@ -155,6 +176,12 @@ export default {
   font-size: 1.25rem;
   margin-top: 0.5rem;
   color: #4b5563;
+}
+
+.hero-text-lightsoff {
+  font-size: 1.25rem;
+  margin-top: 0.5rem;
+  color: white;
 }
 
 .page-title {
