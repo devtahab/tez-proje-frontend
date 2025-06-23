@@ -8,7 +8,7 @@
           type="text" 
           v-model="searchQuery" 
           class="search-input" 
-          placeholder="Kitap adı, yazar veya konu ara..."
+          placeholder="Kitap adı, yazar veya tür ara..."
           @input="searchBooks"
         />
         <button class="search-button" @click="searchBooks">

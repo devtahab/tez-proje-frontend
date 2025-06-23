@@ -720,8 +720,6 @@ export default {
         this.$router.push('/rezervasyonlarim');
         return;
       }
-      console.log(responseTwo.data.data);
-      console.log(resCount);
 
       this.selectedChair = seatNumber;
     },
